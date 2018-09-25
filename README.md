@@ -31,8 +31,81 @@ MVC 패턴에서 Controller 같은 것. start -> initialize -> service -> destroy
         </dependency> 를 추가헤 줘야함.
         그리고 기본 설정으로 spring.mvc.view.prefix=/WEB-INF/views/
           spring.mvc.view.suffix=.jsp 경로에 있는 .jsp파일을 실행하겠단 의미.
-#### 2. controller의 기.
+#### 2. controller의 기본.
 > 같은 패키지에 controller 폴더를 만들고 class 파일 추가. @Controller 를 해줘야 boot가 자동으로 component scan할 때 scan 함. 메인 class @ComponentScan(basePackages = "com.example.demo") 예를 들어 return "hello"를 하면 기본설정에서 지정한 prefix, suffix가 붙어 /WEB-INF/views/hello.jsp 가 실헹되는 구조이다.
-#### 3. Project Structure -> Facets 에서 경로설정도 해줘야함. 
+@RestController는 그 자체가 몸체가 되므로 뷰페이지 없이, return 으로 바로 html을 띄우는 방식이다.
+#### 3. Project Structure -> Facets 에서 경로설정도 해줘야함.
 
 #### 4. MVC 패턴이라 그런지 Ruby On rails, Node express와 비슷한거 같아, 스트레스를 받진 않는다.
+
+### View 템플릿에 대해.
+#### 1. 스프링 부트에서는 JSP를 권고하지 않아, Thymeleaf 사용.
+#### 2. xml에 thymeleaf의존성을 맨 마지막에 추가 했더니 기존에 작성한 JSP관련 코드는 작동하지 않음. 아마도 Overwrite되는 듯 하다.
+#### 3. thymeleaf를 쓰기 위해서는 html에 링크를 추가해줘야 함.
+
+### HTTP Method.
+#### 1.@RequestMapping(value="/post",method=RequestMethod.POST) 이런식으로 GET, POST 조절
+> Express와 별 차이점 없어 보인다.
+#### 2. Post방식으로 넘어오는 Parameter 처리.
+> @RequestParam(value="id")Object id
+#### 3. URI 템플릿. PathParameter에 대해.
+> Express 에서는 '/post/:num' 에 대해 path.parse(req.params.num).base; 과 같은 식으로 받아왔었으나 Spring Boot에서는 value="/post/{num}"에 대해 @PathVariable int num 와 같은 방식으로 받아오며, 클라이언트에서 서버로 전송하는것은 별 차이 없음. 아직까지는 Node Express와 별 차이가 없어 할만한 듯 하다.
+
+
+###Database MySQL 계정생성
+#### 1. 데이터 베이스 생성 create database;
+#### 2. 계정 생성 create user hy identified by '1234';
+#### 3. 계정에 권한 부여 grant all privileges on dbs.* to hy;
+#### 4. flush.
+
+###Database MySQL - SpringBoot 연결 (With mybatis)
+#### 1. maven 추가.
+#### 2. application.properties설정 spring.datasource.url=jdbc:mysql://localhost:3306/dbs?useSSL=false
+spring.datasource.username= 계정이름
+spring.datasource.password= 비밀번호
+> 드라이버는 spring.datasource.driver-class-name= com.mysql.cj.jdbc.Driver를 쓰지않으면 에러가 남(버전업데이트 관련인듯)
+#### 3. Mybatis 설정파일 로드.
+>mybatis.config-location=mybatis-config.xml
+#### 4. 설정파일 생성. <mapper resource="MemberMapper.xml"/>
+#### 5. Mapper.xml 파일에 함수등록, 함수에따른 쿼리 작성 <select id="selectMemberList" parameterType="com.example.demo.BoardDomain" resultType="com.example.demo.BoardDomain">
+        select * from board
+    </select>
+#### 6. Mapper.java파일에 interface로 사용할 함수 등록 public interface BoardMapper {
+    public List<BoardDomain> selectMemberList();
+}
+>함수에 따른 내부 코드는 xml파일로 작성 함.
+#### 7. 다음에는 다중값 속성, insert, delete 도 해볼예정. multpart업로드도 구현해봐야 겠다.
+
+
+### 웹에서부터의 Multipart에 대해.
+#### 1. Front단은 똑같음. <form type="multipart....">
+<input multiple="multiple" type="file" name="...."...>
+</form>
+#### 2. 프론트단 form태그에서 file태그의 이름으로 서버에 @RequestParam("userimage") List<MultipartFile> files parameter선언.
+#### 3. 사진파일을 여러개 업로드 할 경우 때문에 List로 선언.
+#### 4. for문을 이용하여 하나의 사진 올리는 과정을 갯수만큼 반복.
+#### 5. 하나 올리는 과정.
+#### 6. nodejs에서 multer로 구현해 보았으나, 만들어진 모듈을 사용하는거라 그런지 잘 이해되지 않았음.
+#### 7. 스프링에서 구현해 본 결과, 일단 경로, 이름으로 빈 파일을 하나 만들고 입력받은 multipart파일을 만든 빈 파일에 덮어쓰는 식인듯 함.
+#### 8.
+~~~
+String sourceFileName = files.get(i).getOriginalFilename();
+            String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
+~~~
+            파일 이름을 받와와서 적절한 이름으로 변경
+            ~~~
+            String fileUrl = "/Users/HY/IdeaProjects/demo/src/main/webapp/WEB-INF/uploadFiles/";
+            destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
+            destinationFile = new File(fileUrl + destinationFileName);
+            ~~~
+            저장할 폴더 경로 + 적절하게 변경한 이름으로 파일 생성.
+#### 9.multipart파일을 이파일에 덮어쓰기.
+~~~
+destinationFile.getParentFile().mkdirs();
+               files.get(i).transferTo(destinationFile);
+~~~
+#### 10. post방식으로 넘어온 변수 처리에 대해.
+>parameter에 HttpServletRequest request를 선언하고, equest.getParameter("id")같은 식으로 받아오면 된다.
+엄청 노가다 뛰는걸로 알고 있었는데, 새로운걸 배웠다.
+
+#### 11. 다중파일 업로드, 데이터베이스 연결까지 구현 했으니, 이제 CRUD를 만들어 봐야겠다. 그후, facebook OAUTH, 이메일 인증기능 까지 구현해보자.
