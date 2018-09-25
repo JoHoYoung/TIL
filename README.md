@@ -68,8 +68,8 @@ spring.datasource.password= 비밀번호
 >mybatis.config-location=mybatis-config.xml
 #### 4. 설정파일 생성. <mapper resource="MemberMapper.xml"/>
 #### 5. Mapper.xml 파일에 함수등록, 함수에따른 쿼리 작성 <select id="selectMemberList" parameterType="com.example.demo.BoardDomain" resultType="com.example.demo.BoardDomain">
-        select * from board
-    </select>
+####select * from board
+####</select>
 #### 6. Mapper.java파일에 interface로 사용할 함수 등록 public interface BoardMapper {
     public List<BoardDomain> selectMemberList();
 }
