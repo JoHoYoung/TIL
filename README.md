@@ -16,11 +16,13 @@ MVC 패턴에서 Controller 같은 것. start -> initialize -> service -> destroy
 #### 7. Index.html이 기본인듯 하다. 기본설정은 어떻게 바꾸는 걸까?
 #### 8. 포트는 기본이 8080인듯 한데 포트는 어떻게 바꾸는 것일까?
 > 포트는 application.properties에서 server.port=num 으로 기본 port를 바꿀 수 있다고 한다.
-#### 9. Controller 클래스를 만드는데, 클래스가 만들어지는 위치가 중요하다. 위에서 언급했듯이 스프링부트는 메인클래스의 설정에 의해 컴포넌트스캔을 한다고 했었는데,스프링부트는 컴포넌트 스캔을 할 때, 기본적으로 메인클래스가 있는 위치를 기준으로 스캔을 하게된다.만약, AutoScan이 되어야 하는 컴포넌트 클래스들 - 대표적으로 @Controller, @Service, @Repository, @Component등-의 위치가 메인클래스가 위치한 패키지보다  상위 패키지에 있거나, 하위가 아닌 다른 패키지에 있는 경우, 스캔이 되지 않는다. 출처: http://yonguri.tistory.com/entry/스프링부트-SpringBoot-개발환경-구성-2-MVC-환경구성 [Yorath's 블로그]
+#### 9. Controller 클래스를 만드는데, 클래스가 만들어지는 위치가 중요하다. 위에서 언급했듯이 스프링부트는 메인클래스의 설정에 의해 컴포넌트스캔을 한다고 했었는데,스프링부트는 컴포넌트 스캔을 할 때, 기본적으로 메인클래스가 있는 위치를 기준으로 스캔을 하게된다.만약, AutoScan이 되어야 하는 컴포넌트 클래스들 - 대표적으로 @Controller, @Service, @Repository, @Component등-의 위치가 메인클래스가 위치한 패키지보다  상위 패키지에 있거나, 하위가 아닌 다른 패키지에 있는 경우, 스캔이 되지 않는다. 
 
 ### SpringBoot의 MVC 기본.
 #### 1. view의 기본 - jsp를 사용하기 위한 중요한 설정. (이것 때문에 한참 삽질했다)
->pom.xml에 <dependency>
+>pom.xml에 
+```
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
         </dependency>
@@ -28,7 +30,9 @@ MVC 패턴에서 Controller 같은 것. start -> initialize -> service -> destroy
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
             <scope>provided</scope>
-        </dependency> 를 추가헤 줘야함.
+        </dependency> 
+```
+        를 추가헤 줘야함.
         그리고 기본 설정으로 spring.mvc.view.prefix=/WEB-INF/views/
           spring.mvc.view.suffix=.jsp 경로에 있는 .jsp파일을 실행하겠단 의미.
 #### 2. controller의 기본.
@@ -60,26 +64,38 @@ MVC 패턴에서 Controller 같은 것. start -> initialize -> service -> destroy
 
 ###Database MySQL - SpringBoot 연결 (With mybatis)
 #### 1. maven 추가.
-#### 2. application.properties설정 spring.datasource.url=jdbc:mysql://localhost:3306/dbs?useSSL=false
+#### 2. application.properties설정 
+```
+spring.datasource.url=jdbc:mysql://localhost:3306/dbs?useSSL=false
 spring.datasource.username= 계정이름
 spring.datasource.password= 비밀번호
+```
 > 드라이버는 spring.datasource.driver-class-name= com.mysql.cj.jdbc.Driver를 쓰지않으면 에러가 남(버전업데이트 관련인듯)
 #### 3. Mybatis 설정파일 로드.
 >mybatis.config-location=mybatis-config.xml
 #### 4. 설정파일 생성. <mapper resource="MemberMapper.xml"/>
-#### 5. Mapper.xml 파일에 함수등록, 함수에따른 쿼리 작성 <select id="selectMemberList" parameterType="com.example.demo.BoardDomain" resultType="com.example.demo.BoardDomain">
-####select * from board
-####</select>
-#### 6. Mapper.java파일에 interface로 사용할 함수 등록 public interface BoardMapper {
+#### 5. Mapper.xml 파일에 함수등록, 함수에따른 쿼리 작성 
+```
+<select id="selectMemberList" parameterType="com.example.demo.BoardDomain" resultType="com.example.demo.BoardDomain">
+select * from board
+</select>
+```
+#### 6. Mapper.java파일에 interface로 사용할 함수 등록
+```
+public interface BoardMapper {
     public List<BoardDomain> selectMemberList();
 }
+```
 >함수에 따른 내부 코드는 xml파일로 작성 함.
 #### 7. 다음에는 다중값 속성, insert, delete 도 해볼예정. multpart업로드도 구현해봐야 겠다.
 
 ### 웹에서부터의 Multipart에 대해.
-#### 1. Front단은 똑같음. <form type="multipart....">
-####<input multiple="multiple" type="file" name="...."...>
-####</form>
+#### 1. Front단은 똑같음. 
+```
+<form type="multipart....">
+input multiple="multiple" type="file" name="...."...>
+</form>
+```
 #### 2. 프론트단 form태그에서 file태그의 이름으로 서버에 @RequestParam("userimage") List<MultipartFile> files parameter선언.
 #### 3. 사진파일을 여러개 업로드 할 경우 때문에 List로 선언.
 #### 4. for문을 이용하여 하나의 사진 올리는 과정을 갯수만큼 반복.
