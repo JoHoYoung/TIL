@@ -91,18 +91,16 @@ spring.datasource.password= 비밀번호
 String sourceFileName = files.get(i).getOriginalFilename();
             String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
             파일 이름을 받와와서 적절한 이름으로 변경
-            ~~~
             String fileUrl = "/Users/HY/IdeaProjects/demo/src/main/webapp/WEB-INF/uploadFiles/";
             destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
-            destinationFile = new File(fileUrl + destinationFileName);
-            ~~~
+            destinationFile = new File(fileUrl + destinationFileName);]
             저장할 폴더 경로 + 적절하게 변경한 이름으로 파일 생성.
             ```
 #### 9.multipart파일을 이파일에 덮어쓰기.
-~~~
+```
 destinationFile.getParentFile().mkdirs();
                files.get(i).transferTo(destinationFile);
-~~~
+```
 #### 10. post방식으로 넘어온 변수 처리에 대해.
 >parameter에 HttpServletRequest request를 선언하고, equest.getParameter("id")같은 식으로 받아오면 된다.
 엄청 노가다 뛰는걸로 알고 있었는데, 새로운걸 배웠다.
