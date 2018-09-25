@@ -95,7 +95,7 @@ String sourceFileName = files.get(i).getOriginalFilename();
             destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
             destinationFile = new File(fileUrl + destinationFileName);]
             저장할 폴더 경로 + 적절하게 변경한 이름으로 파일 생성.
-            ```
+```
 #### 9.multipart파일을 이파일에 덮어쓰기.
 ```
 destinationFile.getParentFile().mkdirs();
