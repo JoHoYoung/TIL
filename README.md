@@ -87,10 +87,8 @@ spring.datasource.password= 비밀번호
 #### 6. nodejs에서 multer로 구현해 보았으나, 만들어진 모듈을 사용하는거라 그런지 잘 이해되지 않았음.
 #### 7. 스프링에서 구현해 본 결과, 일단 경로, 이름으로 빈 파일을 하나 만들고 입력받은 multipart파일을 만든 빈 파일에 덮어쓰는 식인듯 함.
 #### 8.
-<code>
-String sourceFileName = files.get(i).getOriginalFilename();
+`String sourceFileName = files.get(i).getOriginalFilename();`
             String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
-</code>
             파일 이름을 받와와서 적절한 이름으로 변경
             ~~~
             String fileUrl = "/Users/HY/IdeaProjects/demo/src/main/webapp/WEB-INF/uploadFiles/";
