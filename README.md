@@ -76,7 +76,6 @@ spring.datasource.password= 비밀번호
 >함수에 따른 내부 코드는 xml파일로 작성 함.
 #### 7. 다음에는 다중값 속성, insert, delete 도 해볼예정. multpart업로드도 구현해봐야 겠다.
 
-
 ### 웹에서부터의 Multipart에 대해.
 #### 1. Front단은 똑같음. <form type="multipart....">
 <input multiple="multiple" type="file" name="...."...>
@@ -88,10 +87,10 @@ spring.datasource.password= 비밀번호
 #### 6. nodejs에서 multer로 구현해 보았으나, 만들어진 모듈을 사용하는거라 그런지 잘 이해되지 않았음.
 #### 7. 스프링에서 구현해 본 결과, 일단 경로, 이름으로 빈 파일을 하나 만들고 입력받은 multipart파일을 만든 빈 파일에 덮어쓰는 식인듯 함.
 #### 8.
-~~~
+```
 String sourceFileName = files.get(i).getOriginalFilename();
             String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
-~~~
+```
             파일 이름을 받와와서 적절한 이름으로 변경
             ~~~
             String fileUrl = "/Users/HY/IdeaProjects/demo/src/main/webapp/WEB-INF/uploadFiles/";
