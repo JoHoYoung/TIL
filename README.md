@@ -78,8 +78,8 @@ spring.datasource.password= 비밀번호
 
 ### 웹에서부터의 Multipart에 대해.
 #### 1. Front단은 똑같음. <form type="multipart....">
-<input multiple="multiple" type="file" name="...."...>
-</form>
+####<input multiple="multiple" type="file" name="...."...>
+####</form>
 #### 2. 프론트단 form태그에서 file태그의 이름으로 서버에 @RequestParam("userimage") List<MultipartFile> files parameter선언.
 #### 3. 사진파일을 여러개 업로드 할 경우 때문에 List로 선언.
 #### 4. for문을 이용하여 하나의 사진 올리는 과정을 갯수만큼 반복.
