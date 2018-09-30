@@ -16,11 +16,11 @@ MVC 패턴에서 Controller 같은 것. start -> initialize -> service -> destroy
 #### 7. Index.html이 기본인듯 하다. 기본설정은 어떻게 바꾸는 걸까?
 #### 8. 포트는 기본이 8080인듯 한데 포트는 어떻게 바꾸는 것일까?
 > 포트는 application.properties에서 server.port=num 으로 기본 port를 바꿀 수 있다고 한다.
-#### 9. Controller 클래스를 만드는데, 클래스가 만들어지는 위치가 중요하다. 위에서 언급했듯이 스프링부트는 메인클래스의 설정에 의해 컴포넌트스캔을 한다고 했었는데,스프링부트는 컴포넌트 스캔을 할 때, 기본적으로 메인클래스가 있는 위치를 기준으로 스캔을 하게된다.만약, AutoScan이 되어야 하는 컴포넌트 클래스들 - 대표적으로 @Controller, @Service, @Repository, @Component등-의 위치가 메인클래스가 위치한 패키지보다  상위 패키지에 있거나, 하위가 아닌 다른 패키지에 있는 경우, 스캔이 되지 않는다. 
+#### 9. Controller 클래스를 만드는데, 클래스가 만들어지는 위치가 중요하다. 위에서 언급했듯이 스프링부트는 메인클래스의 설정에 의해 컴포넌트스캔을 한다고 했었는데,스프링부트는 컴포넌트 스캔을 할 때, 기본적으로 메인클래스가 있는 위치를 기준으로 스캔을 하게된다.만약, AutoScan이 되어야 하는 컴포넌트 클래스들 - 대표적으로 @Controller, @Service, @Repository, @Component등의 위치가 메인클래스가 위치한 패키지보다  상위 패키지에 있거나, 하위가 아닌 다른 패키지에 있는 경우, 스캔이 되지 않는다.
 
 ### SpringBoot의 MVC 기본.
 #### 1. view의 기본 - jsp를 사용하기 위한 중요한 설정. (이것 때문에 한참 삽질했다)
->pom.xml에 
+>pom.xml에
 ```
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -30,7 +30,7 @@ MVC 패턴에서 Controller 같은 것. start -> initialize -> service -> destroy
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
             <scope>provided</scope>
-        </dependency> 
+        </dependency>
 ```
         를 추가헤 줘야함.
         그리고 기본 설정으로 spring.mvc.view.prefix=/WEB-INF/views/
@@ -64,7 +64,7 @@ MVC 패턴에서 Controller 같은 것. start -> initialize -> service -> destroy
 
 ###Database MySQL - SpringBoot 연결 (With mybatis)
 #### 1. maven 추가.
-#### 2. application.properties설정 
+#### 2. application.properties설정
 ```
 spring.datasource.url=jdbc:mysql://localhost:3306/dbs?useSSL=false
 spring.datasource.username= 계정이름
@@ -74,7 +74,7 @@ spring.datasource.password= 비밀번호
 #### 3. Mybatis 설정파일 로드.
 >mybatis.config-location=mybatis-config.xml
 #### 4. 설정파일 생성. <mapper resource="MemberMapper.xml"/>
-#### 5. Mapper.xml 파일에 함수등록, 함수에따른 쿼리 작성 
+#### 5. Mapper.xml 파일에 함수등록, 함수에따른 쿼리 작성
 ```
 <select id="selectMemberList" parameterType="com.example.demo.BoardDomain" resultType="com.example.demo.BoardDomain">
 select * from board
@@ -90,7 +90,7 @@ public interface BoardMapper {
 #### 7. 다음에는 다중값 속성, insert, delete 도 해볼예정. multpart업로드도 구현해봐야 겠다.
 
 ### 웹에서부터의 Multipart에 대해.
-#### 1. Front단은 똑같음. 
+#### 1. Front단은 똑같음.
 ```
 <form type="multipart....">
 input multiple="multiple" type="file" name="...."...>
@@ -122,3 +122,89 @@ destinationFile.getParentFile().mkdirs();
 엄청 노가다 뛰는걸로 알고 있었는데, 새로운걸 배웠다.
 
 #### 11. 다중파일 업로드, 데이터베이스 연결까지 구현 했으니, 이제 CRUD를 만들어 봐야겠다. 그후, facebook OAUTH, 이메일 인증기능 까지 구현해보자.
+
+### ORM(Object Relation Mapping)에 대해
+#### 객체와 데이터베이스 불일치 문제를 해결하기 위한 도구.
+#### MyBatis, JPA. MyBatis를 많이 썼지만 JPA를 많이 쓰는 추세라고 한다.
+#### 기존에는 MyBatis를 사용할때는 mapper클래스, 그를 위한 xml, mybatis설정을 위한 xml파일 등 절차가 조금 복잡했으나, JPA를 쓰니 절차가 조금 더 간단해 졌다.
+#### relation과 Mapping을 위한 class(model), 그를 구현하는 Repositry interface 만 구현하면, JPA에서 기본으로 제공하는 함수를 쓸 수 있어 편하다.
+#### 또한 mybatis에서 query mapping을 하던 기능도 충분히 지원을 하니 JPA가 좋다고 생각 된다.
+
+### JPA 사용을 위한 절차.
+#### @Entity는 클래스가 데이터베이스 테이블을 매핑하는 역할을 한다.
+#### @Repository는 Entity조작에 필요한 쿼리를 메서드화 해서 사용할 수 있는 역할을 한다.
+#### 연관관계
+> 1:1, 1:N, N:1, N:N @ManyToOne, @OneToMany
+> @ManyToOne은 즉시 로딩이 기본값이다. 즉시 로딩으로 실행될 때는 연결된 엔티티 정보까지 한번에 가져오려고 하므로 성능에 문제가 생길 수 있다. 지연로딩 되도록 설정하는것이 좋다
+. @ManyToOne(fetch = FetchType.LAZY)
+> @OneToMany를 사용할 경우 mappedBy를 통해 주인을 명시해준다. @OneToMany(mapperBy = "school")
+#### Repository.save(new entity)형식은 insert구문과 같다. 나머지는 update와 같다.
+#### @AutoWired -> 의존성 주입. Repository사용할때 사용한다.
+
+
+#### 1. Relation과 Mapping을 위한 Model 클래스 정의
+> @Entity Anotation을 붙여줘야 함.
+```
+@Entity
+public class board implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int bno;
+    private String username;
+    private String contents;
+
+    public board()
+    {
+
+    }
+
+    public int  getBno()
+    {
+        return bno;
+    }
+
+    public String getUsername()
+    {
+        return username;
+    }
+
+    public String getContents()
+    {
+        return contents;
+    }
+}
+```
+#### 2. 사용을 위한 Repository 클래스 정의.
+> @Repository Annotation을 붙여줘야 함.
+```
+@Repository
+public interface BoardRepository extends JpaRepository<board, Long> {
+
+    board findByusername(@Param("username")String username);
+}
+```
+#### 3. 사용할 Controller에서 Autowierd설정 후 사용(의존성 주입)
+```
+@Autowired
+  BoardRepository BoardRepository;
+```
+#### 4. JPA에서 제공하는 기본적인 CRUD함수.
+```
+반환타입 findBy필드명(Parameter);
+board findByusername(@Param("username")String username);
+```
+
+#### 5. @Query Annotation을 사용해 함수를 만들 수 있다. 다만 JPQL로 작성하여야 하며, 별칭은 필수로 사용하여야한다. (이 부분때문에 오래걸림)
+```
+ SELECT m FROM Member AS m where m.username = 'HY'
+ 별칭을 지정하는 AS는 생략 가능하다.
+ @Query("select u from board u where u.username = :myname")
+    List<board> customfunc(@Param("myname") String name);
+ ```
+ > @Param 이 작동되지 않아 한참을 고생 하였다. 알고보니 mybatis에서 jpa로 바꾸는 중에 @Param을 mybatis패키지에서 받아와서 계속 에러가 나는 것이었다... 패키지를 바꿔주니 바로 해결 되었다.. 정말 허무하다.
+
+ <img width="813" alt="2018-09-30 7 27 03" src="https://user-images.githubusercontent.com/37579650/46257611-bbb57e00-c4f7-11e8-9721-942143f2d2ae.png">
+ <img width="813" alt="2018-09-30 7 27 03" src="https://user-images.githubusercontent.com/37579650/46257611-bbb57e00-c4f7-11e8-9721-942143f2d2ae.png">
+<img width="809" alt="2018-09-30 7 27 11" src="https://user-images.githubusercontent.com/37579650/46257612-bbb57e00-c4f7-11e8-99dd-ea79d445a24a.png">
+<img width="807" alt="2018-09-30 7 27 17" src="https://user-images.githubusercontent.com/37579650/46257613-bbb57e00-c4f7-11e8-94c5-a9c4fed5445a.png">
