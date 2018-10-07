@@ -217,7 +217,8 @@ board findByusername(@Param("username")String username);
 
 javax.persistence.TransactionRequiredException: Executing an update/delete query
 ```
-###에러가 발생하였다. 원인을 찾지 못하겠다.
+
+### 에러가 발생하였다. 원인을 찾지 못하겠다.
 > @Modifying 뿐만아니라 @Transactional 어노테이션도 추가로 작성하니 작동하였다.
 이것때문에 정말 고생한것 같다. @Transactional 어노테이션이 무슨역할을 하는지 알아봐야 겠다.
 >@Transactional은 이름에서 알 수 있듯이 Transaction과 관련있는 것이라고 한다. DB시간에 배운 트랜잭션과 똑같은 것이다. 한 연산의 단위, 쿼리들의 집합... Modifying을 할
