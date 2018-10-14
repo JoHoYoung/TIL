@@ -222,3 +222,49 @@ javax.persistence.TransactionRequiredException: Executing an update/delete query
 > @Modifying 뿐만아니라 @Transactional 어노테이션도 추가로 작성하니 작동하였다.
 이것때문에 정말 고생한것 같다. @Transactional 어노테이션이 무슨역할을 하는지 알아봐야 겠다.
 >@Transactional은 이름에서 알 수 있듯이 Transaction과 관련있는 것이라고 한다. DB시간에 배운 트랜잭션과 똑같은 것이다. 한 연산의 단위, 쿼리들의 집합... Modifying을 할
+
+##JPA
+JPA를 사용하지 않을때 문제.
+jdbc를 직접사용.
+Query가 대부분 비슷하지만 다른것도 많다.
+반복적인 코드가 많다.
+여러가지 문제를 해결하기 위해 ORM사용
+spring boot에서는 Hikari 사용
+
+도메인 모델 기반 사용.
+객체지향의 장점을 활용하기 좋다.
+각종 디자인패턴
+코드 재사용
+비즈니스 로직 구현 및 테스트 편함
+ORM이란 애플리케이션의 클래스와 sql데이터베이스의 테이블 사이의 맵핑 정보를 기술한 메타데이터를 사용하여 객체를 sql데이터베이스의 테이블에 자동으로 영속화 해주는 기술
+
+hibernate가 db에따라 알맞는 sql로 바꿔준
+
+테이블과 테이블간의 외래키는 한 다른테이블의 주키를 외래키를 설정. 다른 두 테이블의 외래키설정 불가.
+
+@Entity 이 클래스가 데이터베이스가 ~라는 테이블에 맵핑이되는 클래스다.
+@id : 주키에 맵핑
+@GenteratedValue: 자동으로 생성되는 값을 사용하겠다. db에 이미 테이블이 만들어져 있고, 그 값을 사용할때는 IDENTITY
+
+spring.jpa.hibernate.ddl-auto=update, 업데이트 , create 로 하면 매번 지우고 새롭게 만드는것이다.
+> Entity class에 속성 추가하면 relation에 자동으로 추가된다.
+
+@Entity 맵핑
+Annotation 기반 설정
+@Entity는 자동으로 테이블로 맵핑 사실상 @Table Annotation이 생략되어 있음. 기본적으로 클래스 이름과 동일한 엔티티 사용
+@Entity(name="sdasad")으로 엔티티 맵핑 변경
+@Table에서 사용하는 기본 값이 Entity의 이름이다. 아무런 설정을 하지 않으면 기본적으로 클래스이름과 같은 entity맵핑.
+
+
+db에서 User키워드가 있어서 사용할 수 없다. @Entitiy(name = "fdsafsd") 의 맵핑은 맵핑되는 릴레이션의 정보를 바꾸는 것이 아니라, 사용될 Entity 클래스의 이름을 설정해 주는것. 엔티티 이름을 이와같은 방법을 통해 바꿀 수 있다.
+
+@Column(nullable = false, unique = true);
+
+@Temporal 어노테이션
+@Temproal(TemporalType.TIMESTAMP)으로 설정하면 날짜 시간,
+@Temproal(TemporalType.TIME) - > 시간만.
+
+@Transient 를 추가하면 column으로 만들지 않는다
+
+@Transient
+private String no;
