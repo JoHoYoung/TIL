@@ -261,10 +261,150 @@ db에서 User키워드가 있어서 사용할 수 없다. @Entitiy(name = "fdsafsd") 의 맵핑은 
 @Column(nullable = false, unique = true);
 
 @Temporal 어노테이션
+```
 @Temproal(TemporalType.TIMESTAMP)으로 설정하면 날짜 시간,
 @Temproal(TemporalType.TIME) - > 시간만.
 
 @Transient 를 추가하면 column으로 만들지 않는다
+```
 
 @Transient
-private String no;
+private String no; 라고 하면 테이블에 no 속성이 추가되지 않는다
+
+Class ->  Entity Type
+vairable -> Value Type
+
+기본적으로 db에서 쿼리를 만드는것이 아니라 JAP로 Entity클래스를 선언하면 DB에 테이블이 형성된다.
+
+Value타입 매핑.
+@Embadable 어노테이션 사용하여 클래스 하나 정의, 그 클래스를 value로 갖는 클래스에서
+
+private Adress temp 라고 선언하면 Address 클래스의 요소가 db테이블의 속성으로 추가된다.
+
+```
+@Embeded
+@AttributePverrodes({
+  @AttributePverride(name="street", column=@Column(name="home_street") )
+  })
+```
+  private Address adress로 오버라이딩 해서 사용 가능. Address의 street 요소가 home_street라는 이름으로 들어오게 된다.
+
+  1대다 맵핑 @OneToMany
+  어떤 엔티티가 있고 다른 엔티티가 있다.
+  관계는 항상 두가지 엔티티가 맞물려 있다.
+
+  속성이 collection이 아닌쪽이 one
+
+  Owner 테이블에서 외래키를 생성하고 갖고있게 된다. 그 외래키는 상대 엔티티의 id를 참조한다.
+
+  어떤관계의 주인 이라는건 관계를 설정했을때 그 값이 반영이 되는것.
+
+@ManyToOne은 외래키만 추가하는 반면
+@OneToMany는 조인테이블을 새로 만든다. 그 테이블에 관계에 대한 정보가 저장되며 외래키를 따로 생성하지 않는다.
+
+서로 참조하는 양방향 관계를 만들 수도 있다. 양쪽에 OneToMany, ManyToOne을 선언하면 양방향 맵핑이라고 생각할 수 있지만 이것은 두개의 단방향 관계이다. 양방향 관계를 설정하려면 따로 설정을 해줘야한다. 양방향 관계를 설정하려면
+@OneToMany(mappedBy = "owner")를 정의 해야하며 mappedBy 는 OneToMany쪽에 정의.
+이때 관계를 설정시에 양쪽에 둘다 관계를 설정해 주어야 한다. @OneToMany인 쪽에 .add.. 를 해주고 @ManyToOne에 setOwner설정을 양쪽으로 설정해주어야 정상적으로 관계 형성이됨. 양방향 관계인데 한쪽에만 add혹은 set 해준다는건 맞지않는것. add는 필수적으로 수행해야하는 코드는 아니다. 하지만 객체지향적으로 생각했을때 둘다 하는것이 좋다.
+
+이상적인 것은 Convenient method를 만들어 사용하는 것.
+```
+public addStudy(Study study)
+{
+  this.getStudies().add(study);
+  study.setOwner(this);
+}
+
+public removeStudy(Study study)
+{
+  this.getStudies().add(study);
+  study.setOwner(null);
+}
+```
+
+Entity의 상태 Cascade Option.
+@OneToMany, @ManyToOne에 Cascade 옵션이 있다.
+cascade란 entity의 상태변화를 전이시키는 것.
+상태는 크게 4가지가 있다. Transient Removed Persistant Detached
+Transient : 객체가 db에 저장될지 안될지 jpa, hibernate가 전혀 모르는 상태. save하기 전.
+SAVE를 하면 persistent상태가 된다. save를 한다고 객체가 바로 들어가는 것은 아니다. 이 상태로 관리하고 있다가 이쯤 됐으면 db에 넣어야 겠다. 판단하는 그 시점에 저장하게 된다. save를 호출했다고 해서 그 즉시 insert 쿼리가 발생하는 것은 아니다. save를 호출하면 hibernate가 아는 상태 persistant 1차캐쉬. 인스턴스가 cache가 된 상태. 이상태에서 다시한번 이 인스턴스를 달라고 하면 셀렉트 쿼리가 발생하지 않는다. cache하고 있는걸 줄게 하며 준다. db에서 나오는것이 아님. 저장을 하지도 않은 상태에서 주는것. transaction이 끝나는 즉 commit이 일어나면, insert쿼리가 발생한다. -> 중간에 값을 바꾸는등 불필요한 액션을 취하지 않는 장점. 객체를 계속 감시하고 있다가 트랜잭션이 끝나면 쿼리 수행. ( Dirty checking 이 객체의 변경사항을 계속 감지한다.)
+
+removed상태에 머물러 있다가 commit이 일어날때 삭제한다.
+
+ hibernate가 persistant 상태로 관리하고 있다.
+@OneToMany(cascade =  )
+
+예를들어 게시글과 댓글의 관계. 게시글이 삭제되면 댓글도 삭제되어야 한다.
+```
+@Entitiy
+public class Post{
+
+@id @GeneratedValue
+private long id
+
+private Set<comment> comments = new HashSet<>();
+
+public void addComment(Comment comment){
+  this.getComments.add(comment);
+  comment.setPost(this)
+}
+
+@Entity
+public class Comment{
+
+@id @GeneratedValue
+private long id;
+
+@OneToMany(mappedby = "post")
+private Post post;
+
+
+}
+
+@OneToMany(cascade =CascadeType.PERSIST)로 설정을 하면. post.save()로 저장을 할때 이 persistant를 알려주세요. transient에서 넘어갈때 같이 persistant가되고 저장이 된다. CascadeType.REMOVE 설정은 지울때 포스트를 삭제하는순간 removed상태가 전파가 되고 comment도 removed상태가 돼서 같이 지워준다. 그냥 CASCADETYE.ALL로 전부 전파하도록 설정하면 편하다.
+```
+
+Fetch 연관관계의 엔티티를 어떻게 가져올것인가. 지(Eager?) 나중에(Lazy?) .
+
+OneToMany는 기본적으로 Lazy 많으니까.
+ManyToOne은 기본적으로 Eager. 생각해보면 합리적이다.
+
+이 default설정 lazy로 인해, 예를들어 post에 적혀있는 comment로 가져올때 n+1셀렉트 에러가 생길수 있다. 이런 fetch전략을 잘 정하는게 성능에 큰 영향을 미침.
+
+스프링 데이터 JPA.
+data access object 역할을 하는 repository를 정의.
+
+```
+@Repository
+@Transactional
+public class PostRepository{
+
+  @AutoWired 보다
+  @PersisenceContext를 쓰는게 좋다.
+  스프링 코드를 최대한 감추는게 JPA의 원칙이라..
+  EntityManager entitiyManager;
+
+  public Post add(Post post)
+  {
+    entitiyManager.persist(post);
+    return post;
+  }
+
+  public void delete(Post post){
+    EntityManager.remover(post);
+  }
+
+}
+이렇게 잘 쓰지 않는다.
+```
+
+훨씬 편리한 방법. 최근에 가장 진보된 형태
+
+```
+@Repository
+public interface PostRepository extends JpaRepository<Post, Long>{
+
+
+}
+```
+
+원래는 @EnableJpaRepositories를 붙여야 하는데 @SpringBootApplication이 자동으로 설정 해 준다.
