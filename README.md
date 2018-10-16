@@ -408,3 +408,25 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 ```
 
 원래는 @EnableJpaRepositories를 붙여야 하는데 @SpringBootApplication이 자동으로 설정 해 준다.
+
+쿼리를 띄웠을때 ?로 나타나는 값을 보는 방법. 쿼리 확인안하고 할거면 hibernate를 쓰지마라. 성능에 문제가 생길 수 있다.
+```
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=TransactionRequiredException
+loggin.level.org.hibernate.type.descriptor.sql=trace
+```
+
+SpringData Common
+상속받아서 Interface를 만든 JpaRepository는 Repository(기능 x), CrudRepository, PagingAndSortingRepository //스프링데이터 Common// 에서 기능을 더 추가한것.
+
+이러한 것들은 @NoRepositoryBean Annotation이 붙어있어 빈을 만들어서 등록하는것을 방지한다. (이것을 상속받아 사용하라는 것. 중간단계 Repository, 실제 Repository가 아님을 의미)
+
+CrudRepository : Save, SaveAll, findById, existsById(존재유무 판단), findAll, findAllById
+
+@Test의 경우는 어차피 모두 rollback이기 때문에 hibernate가 실제로 쿼리를 날리지 않는다.
+
+PagingAndSortingRepository : findAll(Pageable page)
+postRepository.findAll(PageRequest.of(0,10)) new PageRequest 에서 PageRequest.of로 바뀜. deprecated가 발생한다.
+
+null처리
+Optional은 null이 없다. isEmpty사용.
