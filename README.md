@@ -430,3 +430,6 @@ postRepository.findAll(PageRequest.of(0,10)) new PageRequest ¿¡¼­ PageRequest.of
 
 nullÃ³¸®
 OptionalÀº nullÀÌ ¾ø´Ù. isEmpty»ç¿ë.
+
+Query¸¸µé±â
+±âº»ÀûÀÎ naming ±ÔÄ¢À¸·Î ÇÔ¼ö»ç¿ë, Á÷Á¢ ¸¸µé°íÀÚ ÇÒ¶§´Â @Query Annotation »ç¿ë. ±ÔÄ¢ Âü°í.
