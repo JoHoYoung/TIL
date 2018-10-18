@@ -439,3 +439,11 @@ findByCommentContains와 같이 사용 가능 -> 이와같이 사용하면 Like Query가 발생한�
 
 Async 어노테이션을 사용하면 비동기로 처리가능.성능을 최적화 하려면 비동기 처리보다, 쿼리를 최적화 하는것이 성능개선에 더 좋다.
 비동기 쿼리는 가급적 안쓰는것이 좋음
+
+Custom Repository 
+접미사로 Impl 붙이는 것이 보편적.
+커스텀 '인터페이스'를 만들고, 그뒤에 Impl이라는 접미사를 붙인 '구현체'를 구현한다. Impl로 설정되어 있기 때문에 무조건 Impl을 써야함
+
+Insert 뒤에 Select Delete가 있는 경우, Select가 없으면 쿼리가 발생하지 않지만 Select가 있는경우 Insert가 Select에 영향을 줄 수 있으므로 Insert쿼리가 발생함.
+
+데이터베이스에 delete 싱크 안하는 이유 : 어차피 롤백 연산이기 때문에 delete 쿼리 발생하지 않음.
