@@ -433,3 +433,9 @@ OptionalÀº nullÀÌ ¾ø´Ù. isEmpty»ç¿ë.
 
 Query¸¸µé±â
 ±âº»ÀûÀÎ naming ±ÔÄ¢À¸·Î ÇÔ¼ö»ç¿ë, Á÷Á¢ ¸¸µé°íÀÚ ÇÒ¶§´Â @Query Annotation »ç¿ë. ±ÔÄ¢ Âü°í.
+
+Like¿Í ºñ½ÁÇÑ ±â´ÉÀ» ÇÏ´Â Containµµ ÀÖ´Ù.
+findByCommentContains¿Í °°ÀÌ »ç¿ë °¡´É -> ÀÌ¿Í°°ÀÌ »ç¿ëÇÏ¸é Like Query°¡ ¹ß»ýÇÑ´Ù.
+
+Async ¾î³ëÅ×ÀÌ¼ÇÀ» »ç¿ëÇÏ¸é ºñµ¿±â·Î Ã³¸®°¡´É.¼º´ÉÀ» ÃÖÀûÈ­ ÇÏ·Á¸é ºñµ¿±â Ã³¸®º¸´Ù, Äõ¸®¸¦ ÃÖÀûÈ­ ÇÏ´Â°ÍÀÌ ¼º´É°³¼±¿¡ ´õ ÁÁ´Ù.
+ºñµ¿±â Äõ¸®´Â °¡±ÞÀû ¾È¾²´Â°ÍÀÌ ÁÁÀ½
