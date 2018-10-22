@@ -448,4 +448,37 @@ Insert 뒤에 Select Delete가 있는 경우, Select가 없으면 쿼리가 발생하지 않지만 Se
 
 데이터베이스에 delete 싱크 안하는 이유 : 어차피 롤백 연산이기 때문에 delete 쿼리 발생하지 않음.
 
-Query DSL
+JPA repository
+@SpringBootApplication 어노테이션이 있는곳부터 탐색을 시작한다.
+@Repository 라는 어노테이션을 붙이기도 하는데 이것은 중복이다. JpaRepository의 구현체에 @Repository Annotation이 있기때문에 붙이지 않아도 된다. @Repository어노테이션이 붙어져 있으면 예외를 DataAccessException으로 변환 해 주는 장점이 있다.
+
+아이디에 @GeneratedValue 를 붙여주면 아이디를 자동으로 생성 해 준다. 빼면 아이디를 직접 정해줘야함.
+
+JpaRepository.save 에 대해.
+단순한 save기능 뿐만 아니라, 그 객체가 새로운 객체인지, 아닌지를 판단해서 새로운 객체가 아닐경우 entity manager의 merge쪽으로 보내서 detatched 상태를 persistent 상태로 보낸다. 예를 들어 같은 아이디로 new entity를 생성하면 새로 insert가 아니라 update쿼리가 발생
+
+무조건 인스턴스를 새롭게 리턴받아 사용하는것이 합리적이다. persist 상태의 객체를 사용하는 것은 그 객체 상태의 변화를 추적하고 그 객체상태의 변화가 필요한 경우에 반영이 된다.
+ 리턴해서 리턴값을 쓰는것을 습관을 들이자. 값 변경이 잘 안되는 경우가 생길 수 있다.
+
+ ```
+Post post = new Post();
+post.setTitle("jpa");
+Post savePost = PostRepository.save(post);
+
+post.setTitle("gigi");
+의 경우 persist 상태의 객체를 이용하는 것이 아니기 때문에 정상적으로 값이 변경되지 않는다.
+
+
+하지만
+savePost.setTitle("gigi")
+와 같이 사용하면 버그없이 잘 변경된다.
+ ```
+
+
+JPA 쿼리 메소드
+@NamedQuery 기능.
+```
+@NamedQuery(name = "Entity.function" , query = "SELECT [] FROM.....")
+```
+
+@Query Annotation으로 native 쿼리 사용.
