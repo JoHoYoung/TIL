@@ -482,3 +482,76 @@ JPA 쿼리 메소드
 ```
 
 @Query Annotation으로 native 쿼리 사용.
+
+쿼리 메소드 Sort
+```
+findByTitle(String title,Sort sort)
+```
+를 추가하면 Sort가능 . 프로퍼티 또는 alias가 엔티티에 없는 경우에는 예외가 발생한다. property나 alias만 사용해야 한다.
+
+```
+findByTitle(..Sort.By("title"))
+```
+
+하지만 JpaSort.unsafe()함수를 사용하면 함수 호출을 사용할 수 있다.
+```
+findByTitle(JpaSort.unsafe("LENGTH('title')"))
+```
+와 같이 사용하는것은 가능
+
+Named parameter
+@Query("SELECT P FROM Post AS p WHERE p.title = :title")
+List<Post> findByTitle(@Param("title")Stirng title, Sort sort)
+
+SpEL(Spring expression language)
+엔티티 이름을 #{#entityName}(난 왜 쓰는지 잘 모르겠음)
+
+Update 쿼리
+보통 JPA에서 메소드 이름 으로 사용하는것에서 업데이트는 잘 찾아볼 수 없었다.
+ Update 쿼리를 직접 정의 hibernate에서 Select하여 값을 바꿔주는것 만으로 hibernate가 알아서 update쿼리를 날려주기 때문에 굳이 Update쿼리를 사용하는 경우는 잘 없다. 추천하지 않음
+
+주로 업데이트는 persist 상태로 관리 하다가 변화가 일어나서 db에 싱크를 해야겠다 싶을때 flush가 일어나서 객체상태를 db에 동기화 한다. 그때 update를 수행하는데 그래서 굳이 update쿼리를 직접 구현할 필요는 거의 없다.
+
+```
+@Modifying 을 꼭 적어줘야 한다.
+@Query("UPDATE SET...")
+```
+
+내가 예전에 고생했던 부분
+```
+int update = ...updateTitle(..)
+.
+.
+.
+findById를 해도 제대로 변경이 되지 않던 경우가 있었다.
+```
+이유 -> Update를 한다음에 find를 해도 Select를 하지 않는다. 왜 그러냐면 저 객체는 persist에 그대로 있다. 트랜잭션이 끝나지 않았기 때문에 캐쉬, persist context가 비워지지 않았기 때문에 persistant 객체이다. 그상태로 find 해봤자 db로 가지 않고 캐쉬에 있던것을 그대로 가져온다. 비록 update쿼리는 발생했지만 아직 persistant 상태에 남아있던 객체는 그대로 바뀌기 전 상태이기 때문에 바뀌지 않은것처럼 가져온다.
+
+@Modifying(clearAutomatically = true, flushAutomatically = true) 옵션으로 클리어를 해야 제대로 받아볼 수 있다. 이는 업데이트 쿼리를 실행했을때, 그 이후해 persistant context 클리어, flush를 해주는 기능 그동안 persitant context안에 있던 캐쉬를 비워준다. 비워줘야 find할때 db에서 새로 가져온다.
+
+이 방법을 추천하지 않는다. delete도 추천하지 않는다.
+```
+public void savePost(){
+  Post post = new Post()
+  post.setTitle("spring")
+  return postRepository.save(post)
+}
+.
+.
+Post Spring = savePost()
+Spring.setTitle("hibernate")
+```
+그냥 이렇게 쓰는게 훨씬좋다. 똑같이 update쿼리가 날아가며 변경사항을 db에 저장까지 해준다.
+내가 혼자 하는 프로젝트 에서는 적어도 @Query("Update...")를 쓸 필요는 없을것 같다.
+
+Entity Graph
+
+transaction 안, cache를 클리어하지 않았으면 persistant 상태다.
+
+```
+@NameEntityGraph(name = "comment.post",
+attributeNodes = @NameAttributeNode("post"))
+
+@EntityGraph(value = "Comment.post")
+```
+설정한 Entity를  EagerMode로 가져온다. 설정 안되어있는것은 기본전략으로. @ManyToOne LAZY의 경우는 연관 관계가 설정되있는 Entity정보를 필요할때만... Eagermode는 필요하지 않더라도 일단 다 가져옴... 까먹었음
