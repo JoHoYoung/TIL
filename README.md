@@ -554,4 +554,4 @@ attributeNodes = @NameAttributeNode("post"))
 
 @EntityGraph(value = "Comment.post")
 ```
-설정한 Entity를  EagerMode로 가져온다. 설정 안되어있는것은 기본전략으로. @ManyToOne LAZY의 경우는 연관 관계가 설정되있는 Entity정보를 필요할때만... Eagermode는 필요하지 않더라도 일단 다 가져옴... 까먹었음
+설정한 Entity를  EagerMode로 가져온다. 설정 안되어있는것은 기본전략으로. @ManyToOne LAZY의 경우는 연관 관계가 설정되있는 Entity정보를 필요할때만... Eagermode는 필요하지 않더라도 일단 다 가져옴... 까먹었음..
