@@ -555,3 +555,30 @@ attributeNodes = @NameAttributeNode("post"))
 @EntityGraph(value = "Comment.post")
 ```
 설정한 Entity를  EagerMode로 가져온다. 설정 안되어있는것은 기본전략으로. @ManyToOne LAZY의 경우는 연관 관계가 설정되있는 Entity정보를 필요할때만... Eager mode는 필요하지 않더라도 일단 다 가져옴... 까먹었음..
+
+Projection.
+데이터의 속성이 너무 많을때 특정 원소만 골라서 가져오는 것.
+```
+SELECT field1,field2....
+```
+일부만 가져올 수 있는 기능
+interface기반, class기반 두가지 방법. closed projection, open projection
+
+closed Projection
+>원하는 속성만 가지고있는 Entity 정의 
+
+Transaction
+>@Transactional 기능. 사용하는 Repository들은 트랜잭션이 모두 적용되어 있다.
+
+@Transactional Annotation은 Runtime exception, 에러가 발생하면 Rollback을 적용한다.
+flushmode: database에 싱크를 하는 모드. 언제 데이터베이스에 싱크를 할것인가. flush never인 경우 : 나는 플러쉬를 안할것. Readonly로 사용할것이기 때문에. dirty checking을 하지 않아도 된다. 성능 향상에 많은 도움이 됨.
+
+Auditing : 변화가 발생 했을때, 언제 누구에 의해 발생 하였는지를 기록하는 기능.
+
+@CreatedDate
+@LastModifiedDate
+@CreatedBy
+@LastModifiedBy
+Auditing은 자동설정이 되지 않기 때문에 메인 어플리케이션 위에 EnalbleJpaAiditing 추가.
+
+엔티티 클래스 위에 @EntitiyListeners 추가.
