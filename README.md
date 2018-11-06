@@ -54,13 +54,13 @@ MVC 패턴에서 Controller 같은 것. start -> initialize -> service -> destroy
 > Express 에서는 '/post/:num' 에 대해 path.parse(req.params.num).base; 과 같은 식으로 받아왔었으나 Spring Boot에서는 value="/post/{num}"에 대해 @PathVariable int num 와 같은 방식으로 받아오며, 클라이언트에서 서버로 전송하는것은 별 차이 없음.
 
 
-###Database MySQL 계정생성
+### Database MySQL 계정생성
 1. 데이터 베이스 생성 create database;
 2. 계정 생성 create user hy identified by '1234';
 3. 계정에 권한 부여 grant all privileges on dbs.* to hy;
 4. flush.
 
-###Database MySQL - SpringBoot 연결 (With mybatis)
+### Database MySQL - SpringBoot 연결 (With mybatis)
 1. maven 추가.
 2. application.properties설정
 ```
@@ -213,8 +213,8 @@ board findByusername(@Param("username")String username);
 ### 6. @Modifying, @Query를 이용해 칼럼 속성을 바꾸는 함수를 작성하니
 ```
 @Modifying
-    @Query("update user_schema s set s.auth=1 where s.id=?1")
-    void Authuser(@Param("id")String id);
+@Query("update user_schema s set s.auth=1 where s.id=?1")
+void Authuser(@Param("id")String id);
 
 javax.persistence.TransactionRequiredException: Executing an update/delete query
 ```
@@ -270,44 +270,34 @@ javax.persistence.TransactionRequiredException: Executing an update/delete query
 ```
 @Transient
 private String no;
-이렇게 선언 하면 테이블에 no 속성이 추가되지 않는다
+이렇 선언 하면 테이블에 no 속성이 추가되지 않는다
 ````
-Class ->  Entity Type
-vairable -> Value Type
+- Class ->  Entity Type
+- vairable -> Value Type
 
-기본적으로 db에서 쿼리를 만드는것이 아니라 JAP로 Entity클래스를 선언하면 DB에 테이블이 형성된다.
+* 기본적으로 db에서 쿼리를 만드는것이 아니라 JAP로 Entity클래스를 선언하면 DB에 테이블이 형성된다.
 
-Value타입 매핑.
-@Embadable 어노테이션 사용하여 클래스 하나 정의, 그 클래스를 value로 갖는 클래스에서
+- Value타입 매핑.
+  - @Embadable 어노테이션 사용하여 클래스 하나 정의, 그 클래스를 value로 갖는 클래스에서 private Adress temp 라고 선언하면 Address 클래스의 요소가 db테이블의 속성으로 추가된다.
 
-private Adress temp 라고 선언하면 Address 클래스의 요소가 db테이블의 속성으로 추가된다.
-
+### private Address adress로 오버로딩 해서 사용 가능. Address의 street 요소가 home_street라는 이름으로 들어오게 된다.
 ```
 @Embeded
-@AttributePverrodes({
-  @AttributePverride(name="street", column=@Column(name="home_street") )
+@AttributeOverrodes({
+  @AttributeOverride(name="street", column=@Column(name="home_street") )
   })
 ```
-  private Address adress로 오버라이딩 해서 사용 가능. Address의 street 요소가 home_street라는 이름으로 들어오게 된다.
+- 1대다 맵핑 @OneToMany
+  - 어떤 엔티티가 있고 다른 엔티티가 있다. 관계는 항상 두가지 엔티티가 맞물려 있다.
+  - 속성이 collection이 아닌쪽이 one
+  - Owner 테이블에서 외래키를 생성하고 갖고있게 된다. 그 외래키는 상대 엔티티의 id를 참조한다.
+  - 어떤관계의 주인 이라는건 관계를 설정했을때 그 값이 반영이 되는것.
+  - @ManyToOne은 외래키만 추가하는 반면
+  - @OneToMany는 조인테이블을 새로 만든다. 그 테이블에 관계에 대한 정보가 저장되며 외래키를 따로 생성하지 않는다.
 
-  1대다 맵핑 @OneToMany
-  어떤 엔티티가 있고 다른 엔티티가 있다.
-  관계는 항상 두가지 엔티티가 맞물려 있다.
-
-  속성이 collection이 아닌쪽이 one
-
-  Owner 테이블에서 외래키를 생성하고 갖고있게 된다. 그 외래키는 상대 엔티티의 id를 참조한다.
-
-  어떤관계의 주인 이라는건 관계를 설정했을때 그 값이 반영이 되는것.
-
-@ManyToOne은 외래키만 추가하는 반면
-@OneToMany는 조인테이블을 새로 만든다. 그 테이블에 관계에 대한 정보가 저장되며 외래키를 따로 생성하지 않는다.
-
-서로 참조하는 양방향 관계를 만들 수도 있다. 양쪽에 OneToMany, ManyToOne을 선언하면 양방향 맵핑이라고 생각할 수 있지만 이것은 두개의 단방향 관계이다. 양방향 관계를 설정하려면 따로 설정을 해줘야한다. 양방향 관계를 설정하려면
-@OneToMany(mappedBy = "owner")를 정의 해야하며 mappedBy 는 OneToMany쪽에 정의.
-이때 관계를 설정시에 양쪽에 둘다 관계를 설정해 주어야 한다. @OneToMany인 쪽에 .add.. 를 해주고 @ManyToOne에 setOwner설정을 양쪽으로 설정해주어야 정상적으로 관계 형성이됨. 양방향 관계인데 한쪽에만 add혹은 set 해준다는건 맞지않는것. add는 필수적으로 수행해야하는 코드는 아니다. 하지만 객체지향적으로 생각했을때 둘다 하는것이 좋다.
-
-이상적인 것은 Convenient method를 만들어 사용하는 것.
+- 서로 참조하는 양방향 관계를 만들 수도 있다. 양쪽에 OneToMany, ManyToOne을 선언하면 양방향 맵핑이라고 생각할 수 있지만 이것은 두개의 단방향 관계이다. 양방향 관계를 설정하려면 따로 설정을 해줘야한다. 양방향 관계를 설정하려면 @OneToMany(mappedBy = "owner")를 정의 해야하며 mappedBy 는 OneToMany쪽에 정의.
+- 이때 관계를 설정시에 양쪽에 둘다 관계를 설정해 주어야 한다. @OneToMany인 쪽에 .add.. 를 해주고 @ManyToOne에 setOwner설정을 양쪽으로 설정해주어야 정상적으로 관계 형성이됨. 양방향 관계인데 한쪽에만 add혹은 set 해준다는건 맞지않는것. add는 필수적으로 수행해야하는 코드는 아니다. 하지만 객체지향적으로 생각했을때 둘다 하는것이 좋다.
+- 이상적인 것은 Convenient method를 만들어 사용하는 것.
 ```
 public addStudy(Study study)
 {
