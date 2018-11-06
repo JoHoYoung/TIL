@@ -6,17 +6,17 @@ Today i learned about spring-boot
 MVC 패턴에서 Controller 같은 것. start -> initialize -> service -> destroy
 
 ### spring-boot로 초기셋팅.
-#### 1. spring boot 플러그인 설치
-#### 2. 플러그인을 설치하면 spring intiaizr가 생김.
-#### 3. 이걸 선택해서 프로젝트 생성.
-#### 4. Web 라이브러리 선택.
-#### 5. SpringBoot는 어플리케이션이 시작될때 필요한 기본 설정들을 자동으로 설정하게 되어 있는데 (Auto Configuration) 그 중 DataSource설정이 자동구성 될 때 필요한 Database Type 정보들이 설정되어 있지 않아서 에러가 난다.
-#### 6. db를 결정하지 않은 경우 메인 클래스에 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class}) 추가.
-#### 7. SpringBoot는 프로젝트가 생성될때 Web라이브러리가 포함된 경우, 정적인 웹리소스는 src > main > resources > static 아래에서 관리되도록 설정된다. 즉, html, css, js, image등의 정적컨텐츠는 static아래에 위치시키면 접근가능하고, static이 루트폴더가 된다는 의미이다.프로젝트를 생성할 당시, 라이브러를 추가할때 Web 라이브러를 추가했다면 static 폴더가 자동으로 만들어진다.
-#### 7. Index.html이 기본인듯 하다. 기본설정은 어떻게 바꾸는 걸까?
-#### 8. 포트는 기본이 8080인듯 한데 포트는 어떻게 바꾸는 것일까?
+1. spring boot 플러그인 설치
+2. 플러그인을 설치하면 spring intiaizr가 생김.
+3. 이걸 선택해서 프로젝트 생성.
+4. Web 라이브러리 선택.
+5. SpringBoot는 어플리케이션이 시작될때 필요한 기본 설정들을 자동으로 설정하게 되어 있는데 (Auto Configuration) 그 중 DataSource설정이 자동구성 될 때 필요한 Database Type 정보들이 설정되어 있지 않아서 에러가 난다.
+6. db를 결정하지 않은 경우 메인 클래스에 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class}) 추가.
+7. SpringBoot는 프로젝트가 생성될때 Web라이브러리가 포함된 경우, 정적인 웹리소스는 src > main > resources > static 아래에서 관리되도록 설정된다. 즉, html, css, js, image등의 정적컨텐츠는 static아래에 위치시키면 접근가능하고, static이 루트폴더가 된다는 의미이다.프로젝트를 생성할 당시, 라이브러를 추가할때 Web 라이브러를 추가했다면 static 폴더가 자동으로 만들어진다.
+8. Index.html이 기본인듯 하다. 기본설정은 어떻게 바꾸는 걸까?
+9. 포트는 기본이 8080인듯 한데 포트는 어떻게 바꾸는 것일까?
 > 포트는 application.properties에서 server.port=num 으로 기본 port를 바꿀 수 있다고 한다.
-#### 9. Controller 클래스를 만드는데, 클래스가 만들어지는 위치가 중요하다. 위에서 언급했듯이 스프링부트는 메인클래스의 설정에 의해 컴포넌트스캔을 한다고 했었는데,스프링부트는 컴포넌트 스캔을 할 때, 기본적으로 메인클래스가 있는 위치를 기준으로 스캔을 하게된다.만약, AutoScan이 되어야 하는 컴포넌트 클래스들 - 대표적으로 @Controller, @Service, @Repository, @Component등의 위치가 메인클래스가 위치한 패키지보다  상위 패키지에 있거나, 하위가 아닌 다른 패키지에 있는 경우, 스캔이 되지 않는다.
+10. Controller 클래스를 만드는데, 클래스가 만들어지는 위치가 중요하다. 위에서 언급했듯이 스프링부트는 메인클래스의 설정에 의해 컴포넌트스캔을 한다고 했었는데,스프링부트는 컴포넌트 스캔을 할 때, 기본적으로 메인클래스가 있는 위치를 기준으로 스캔을 하게된다.만약, AutoScan이 되어야 하는 컴포넌트 클래스들 - 대표적으로 @Controller, @Service, @Repository, @Component등의 위치가 메인클래스가 위치한 패키지보다  상위 패키지에 있거나, 하위가 아닌 다른 패키지에 있는 경우, 스캔이 되지 않는다.
 
 ### SpringBoot의 MVC 기본.
 #### 1. view의 기본 - jsp를 사용하기 위한 중요한 설정. (이것 때문에 한참 삽질했다)
@@ -565,7 +565,7 @@ SELECT field1,field2....
 interface기반, class기반 두가지 방법. closed projection, open projection
 
 closed Projection
->원하는 속성만 가지고있는 Entity 정의 
+>원하는 속성만 가지고있는 Entity 정의
 
 Transaction
 >@Transactional 기능. 사용하는 Repository들은 트랜잭션이 모두 적용되어 있다.
