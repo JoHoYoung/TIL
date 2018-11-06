@@ -33,77 +33,77 @@ MVC 패턴에서 Controller 같은 것. start -> initialize -> service -> destroy
             <scope>provided</scope>
         </dependency>
 ```
-        를 추가헤 줘야함.
-        그리고 기본 설정으로 spring.mvc.view.prefix=/WEB-INF/views/
-          spring.mvc.view.suffix=.jsp 경로에 있는 .jsp파일을 실행하겠단 의미.
+
+를 추가헤 줘야함. 그리고 기본 설정으로 spring.mvc.view.prefix=/WEB-INF/views/spring.mvc.view.suffix=.jsp 경로에 있는 .jsp파일을 실행하겠단 의미.
 #### 2. controller의 기본.
 > 같은 패키지에 controller 폴더를 만들고 class 파일 추가. @Controller 를 해줘야 boot가 자동으로 component scan할 때 scan 함. 메인 class @ComponentScan(basePackages = "com.example.demo") 예를 들어 return "hello"를 하면 기본설정에서 지정한 prefix, suffix가 붙어 /WEB-INF/views/hello.jsp 가 실헹되는 구조이다.
 @RestController는 그 자체가 몸체가 되므로 뷰페이지 없이, return 으로 바로 html을 띄우는 방식이다.
 #### 3. Project Structure -> Facets 에서 경로설정도 해줘야함.
 
-#### 4. MVC 패턴이라 그런지 Ruby On rails, Node express와 비슷한거 같아, 스트레스를 받진 않는다.
-
 ### View 템플릿에 대해.
-#### 1. 스프링 부트에서는 JSP를 권고하지 않아, Thymeleaf 사용.
-#### 2. xml에 thymeleaf의존성을 맨 마지막에 추가 했더니 기존에 작성한 JSP관련 코드는 작동하지 않음. 아마도 Overwrite되는 듯 하다.
-#### 3. thymeleaf를 쓰기 위해서는 html에 링크를 추가해줘야 함.
+1. 스프링 부트에서는 JSP를 권고하지 않아, Thymeleaf 사용.
+2. xml에 thymeleaf의존성을 맨 마지막에 추가 했더니 기존에 작성한 JSP관련 코드는 작동하지 않음. 아마도 Overwrite되는 듯 하다.
+3. thymeleaf를 쓰기 위해서는 html에 링크를 추가해줘야 함.
 
 ### HTTP Method.
-#### 1.@RequestMapping(value="/post",method=RequestMethod.POST) 이런식으로 GET, POST 조절
+1. @RequestMapping(value="/post",method=RequestMethod.POST) 이런식으로 GET, POST 조절
 > Express와 별 차이점 없어 보인다.
-#### 2. Post방식으로 넘어오는 Parameter 처리.
+2. Post방식으로 넘어오는 Parameter 처리.
 > @RequestParam(value="id")Object id
-#### 3. URI 템플릿. PathParameter에 대해.
-> Express 에서는 '/post/:num' 에 대해 path.parse(req.params.num).base; 과 같은 식으로 받아왔었으나 Spring Boot에서는 value="/post/{num}"에 대해 @PathVariable int num 와 같은 방식으로 받아오며, 클라이언트에서 서버로 전송하는것은 별 차이 없음. 아직까지는 Node Express와 별 차이가 없어 할만한 듯 하다.
+3. URI 템플릿. PathParameter에 대해.
+> Express 에서는 '/post/:num' 에 대해 path.parse(req.params.num).base; 과 같은 식으로 받아왔었으나 Spring Boot에서는 value="/post/{num}"에 대해 @PathVariable int num 와 같은 방식으로 받아오며, 클라이언트에서 서버로 전송하는것은 별 차이 없음.
 
 
 ###Database MySQL 계정생성
-#### 1. 데이터 베이스 생성 create database;
-#### 2. 계정 생성 create user hy identified by '1234';
-#### 3. 계정에 권한 부여 grant all privileges on dbs.* to hy;
-#### 4. flush.
+1. 데이터 베이스 생성 create database;
+2. 계정 생성 create user hy identified by '1234';
+3. 계정에 권한 부여 grant all privileges on dbs.* to hy;
+4. flush.
 
 ###Database MySQL - SpringBoot 연결 (With mybatis)
-#### 1. maven 추가.
-#### 2. application.properties설정
+1. maven 추가.
+2. application.properties설정
 ```
 spring.datasource.url=jdbc:mysql://localhost:3306/dbs?useSSL=false
 spring.datasource.username= 계정이름
 spring.datasource.password= 비밀번호
 ```
 > 드라이버는 spring.datasource.driver-class-name= com.mysql.cj.jdbc.Driver를 쓰지않으면 에러가 남(버전업데이트 관련인듯)
-#### 3. Mybatis 설정파일 로드.
+
+3. Mybatis 설정파일 로드.
 >mybatis.config-location=mybatis-config.xml
-#### 4. 설정파일 생성. <mapper resource="MemberMapper.xml"/>
-#### 5. Mapper.xml 파일에 함수등록, 함수에따른 쿼리 작성
+
+4. 설정파일 생성. <mapper resource="MemberMapper.xml"/>
+5. Mapper.xml 파일에 함수등록, 함수에따른 쿼리 작성
 ```
 <select id="selectMemberList" parameterType="com.example.demo.BoardDomain" resultType="com.example.demo.BoardDomain">
 select * from board
 </select>
 ```
-#### 6. Mapper.java파일에 interface로 사용할 함수 등록
+6. Mapper.java파일에 interface로 사용할 함수 등록
 ```
 public interface BoardMapper {
     public List<BoardDomain> selectMemberList();
 }
 ```
 >함수에 따른 내부 코드는 xml파일로 작성 함.
-#### 7. 다음에는 다중값 속성, insert, delete 도 해볼예정. multpart업로드도 구현해봐야 겠다.
+
+7. 다음에는 다중값 속성, insert, delete 도 해볼예정. multpart업로드도 구현해봐야 겠다.
 
 ### 웹에서부터의 Multipart에 대해.
-#### 1. Front단은 똑같음.
+1. Front단은 똑같음.
 ```
 <form type="multipart....">
 input multiple="multiple" type="file" name="...."...>
 </form>
 ```
-#### 2. 프론트단 form태그에서 file태그의 이름으로 서버에 @RequestParam("userimage") List<MultipartFile> files parameter선언.
-#### 3. 사진파일을 여러개 업로드 할 경우 때문에 List로 선언.
-#### 4. for문을 이용하여 하나의 사진 올리는 과정을 갯수만큼 반복.
-#### 5. 하나 올리는 과정.
-#### 6. nodejs에서 multer로 구현해 보았으나, 만들어진 모듈을 사용하는거라 그런지 잘 이해되지 않았음.
-#### 7. 스프링에서 구현해 본 결과, 일단 경로, 이름으로 빈 파일을 하나 만들고 입력받은 multipart파일을 만든 빈 파일에 덮어쓰는 식인듯 함.
-#### 8.
+2. 프론트단 form태그에서 file태그의 이름으로 서버에 @RequestParam("userimage") List<MultipartFile> files parameter선언.
+3. 사진파일을 여러개 업로드 할 경우 때문에 List로 선언.
+4. for문을 이용하여 하나의 사진 올리는 과정을 갯수만큼 반복.
+5. 하나 올리는 과정.
+6. nodejs에서 multer로 구현해 보았으나, 만들어진 모듈을 사용하는거라 그런지 잘 이해되지 않았음.
+7. 스프링에서 구현해 본 결과, 일단 경로, 이름으로 빈 파일을 하나 만들고 입력받은 multipart파일을 만든 빈 파일에 덮어쓰는 식인듯 함.
+
 ```
 String sourceFileName = files.get(i).getOriginalFilename();
             String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
@@ -113,34 +113,34 @@ String sourceFileName = files.get(i).getOriginalFilename();
             destinationFile = new File(fileUrl + destinationFileName);]
             저장할 폴더 경로 + 적절하게 변경한 이름으로 파일 생성.
 ```
-#### 9.multipart파일을 이파일에 덮어쓰기.
+9. multipart파일을 이파일에 덮어쓰기.
 ```
 destinationFile.getParentFile().mkdirs();
                files.get(i).transferTo(destinationFile);
 ```
-#### 10. post방식으로 넘어온 변수 처리에 대해.
->parameter에 HttpServletRequest request를 선언하고, equest.getParameter("id")같은 식으로 받아오면 된다.
+10. post방식으로 넘어온 변수 처리에 대해.
+>parameter에 HttpServletRequest request를 선언하고, Request.getParameter("id")같은 식으로 받아오면 된다.
 엄청 노가다 뛰는걸로 알고 있었는데, 새로운걸 배웠다.
 
-#### 11. 다중파일 업로드, 데이터베이스 연결까지 구현 했으니, 이제 CRUD를 만들어 봐야겠다. 그후, facebook OAUTH, 이메일 인증기능 까지 구현해보자.
+11. 다중파일 업로드, 데이터베이스 연결까지 구현 했으니, 이제 CRUD를 만들어 봐야겠다. 그후, facebook OAUTH, 이메일 인증기능 까지 구현해보자.
 
 ### ORM(Object Relation Mapping)에 대해
-#### 객체와 데이터베이스 불일치 문제를 해결하기 위한 도구.
-#### MyBatis, JPA. MyBatis를 많이 썼지만 JPA를 많이 쓰는 추세라고 한다.
-#### 기존에는 MyBatis를 사용할때는 mapper클래스, 그를 위한 xml, mybatis설정을 위한 xml파일 등 절차가 조금 복잡했으나, JPA를 쓰니 절차가 조금 더 간단해 졌다.
-#### relation과 Mapping을 위한 class(model), 그를 구현하는 Repositry interface 만 구현하면, JPA에서 기본으로 제공하는 함수를 쓸 수 있어 편하다.
-#### 또한 mybatis에서 query mapping을 하던 기능도 충분히 지원을 하니 JPA가 좋다고 생각 된다.
+- 객체와 데이터베이스 불일치 문제를 해결하기 위한 도구.
+- MyBatis, JPA. MyBatis를 많이 썼지만 JPA를 많이 쓰는 추세라고 한다.
+- 기존에는 MyBatis를 사용할때는 mapper클래스, 그를 위한 xml, mybatis설정을 위한 xml파일 등 절차가 조금 복잡했으나, JPA를 쓰니 절차가 조금 더 간단해 졌다.
+- relation과 Mapping을 위한 class(model), 그를 구현하는 Repositry interface 만 구현하면, JPA에서 기본으로 제공하는 함수를 쓸 수 있어 편하다.
+- 또한 mybatis에서 query mapping을 하던 기능도 충분히 지원을 하니 JPA가 좋다고 생각 된다.
 
 ### JPA 사용을 위한 절차.
-#### @Entity는 클래스가 데이터베이스 테이블을 매핑하는 역할을 한다.
-#### @Repository는 Entity조작에 필요한 쿼리를 메서드화 해서 사용할 수 있는 역할을 한다.
-#### 연관관계
-> 1:1, 1:N, N:1, N:N @ManyToOne, @OneToMany
-> @ManyToOne은 즉시 로딩이 기본값이다. 즉시 로딩으로 실행될 때는 연결된 엔티티 정보까지 한번에 가져오려고 하므로 성능에 문제가 생길 수 있다. 지연로딩 되도록 설정하는것이 좋다
-. @ManyToOne(fetch = FetchType.LAZY)
-> @OneToMany를 사용할 경우 mappedBy를 통해 주인을 명시해준다. @OneToMany(mapperBy = "school")
-#### Repository.save(new entity)형식은 insert구문과 같다. 나머지는 update와 같다.
-#### @AutoWired -> 의존성 주입. Repository사용할때 사용한다.
+- @Entity는 클래스가 데이터베이스 테이블을 매핑하는 역할을 한다.
+- @Repository는 Entity조작에 필요한 쿼리를 메서드화 해서 사용할 수 있는 역할을 한다.
+- 연관관계
+- 1:1, 1:N, N:1, N:N @ManyToOne, @OneToMany
+  - @OneToMany는 즉시 로딩이 기본값이다. 즉시 로딩으로 실행될 때는 연결된 엔티티 정보까지 한번에 가져오려고 하므로 성능에 문제가 생길 수 있다. 지연로딩 되도록 설정하는것이 좋다
+  - @OneToMany(fetch = FetchType.LAZY)
+  - @OneToMany를 사용할 경우 mappedBy를 통해 주인을 명시해준다. @OneToMany(mapperBy = "school")
+- Repository.save(new entity)형식은 insert구문과 같다. 나머지는 update와 같다.
+- @AutoWired -> 의존성 주입. Repository사용할때 사용한다.
 
 
 #### 1. Relation과 Mapping을 위한 Model 클래스 정의
@@ -224,54 +224,54 @@ javax.persistence.TransactionRequiredException: Executing an update/delete query
 이것때문에 정말 고생한것 같다. @Transactional 어노테이션이 무슨역할을 하는지 알아봐야 겠다.
 >@Transactional은 이름에서 알 수 있듯이 Transaction과 관련있는 것이라고 한다. DB시간에 배운 트랜잭션과 똑같은 것이다. 한 연산의 단위, 쿼리들의 집합... Modifying을 할
 
-##JPA
-JPA를 사용하지 않을때 문제.
-jdbc를 직접사용.
-Query가 대부분 비슷하지만 다른것도 많다.
-반복적인 코드가 많다.
-여러가지 문제를 해결하기 위해 ORM사용
-spring boot에서는 Hikari 사용
+## JPA
+- JPA를 사용하지 않을때 문제.
+  - jdbc를 직접사용.
+  - Query가 대부분 비슷하지만 다른것도 많다.
+  - 반복적인 코드가 많다.
+  - 여러가지 문제를 해결하기 위해 ORM사용
+  - spring boot에서는 Hikari 사용
 
-도메인 모델 기반 사용.
-객체지향의 장점을 활용하기 좋다.
-각종 디자인패턴
-코드 재사용
-비즈니스 로직 구현 및 테스트 편함
-ORM이란 애플리케이션의 클래스와 sql데이터베이스의 테이블 사이의 맵핑 정보를 기술한 메타데이터를 사용하여 객체를 sql데이터베이스의 테이블에 자동으로 영속화 해주는 기술
+- 장점
+  - 도메인 모델 기반 사용.
+  - 객체지향의 장점을 활용하기 좋다.
+  - 각종 디자인패턴
+  - 코드 재사용
+  - 비즈니스 로직 구현 및 테스트 편함
 
-hibernate가 db에따라 알맞는 sql로 바꿔준
+### ORM이란 애플리케이션의 클래스와 sql데이터베이스의 테이블 사이의 맵핑 정보를 기술한 메타데이터를 사용하여 객체를 sql데이터베이스의 테이블에 자동으로 영속화 해주는 기술
+> hibernate가 db에따라 알맞는 sql로 바꿔준다
 
-테이블과 테이블간의 외래키는 한 다른테이블의 주키를 외래키를 설정. 다른 두 테이블의 외래키설정 불가.
+- 테이블과 테이블간의 외래키는 한 다른테이블의 주키를 외래키를 설정. 다른 두 테이블의 외래키설정 불가.
 
-@Entity 이 클래스가 데이터베이스가 ~라는 테이블에 맵핑이되는 클래스다.
-@id : 주키에 맵핑
-@GenteratedValue: 자동으로 생성되는 값을 사용하겠다. db에 이미 테이블이 만들어져 있고, 그 값을 사용할때는 IDENTITY
+- @Entity 이 클래스가 데이터베이스가 ~라는 테이블에 맵핑이되는 클래스다.
+- @id : 주키에 맵핑
+- @GenteratedValue: 자동으로 생성되는 값을 사용하겠다. db에 이미 테이블이 만들어져 있고, 그 값을 사용할때는 IDENTITY
 
-spring.jpa.hibernate.ddl-auto=update, 업데이트 , create 로 하면 매번 지우고 새롭게 만드는것이다.
+### spring.jpa.hibernate.ddl-auto=update, 업데이트  create 로 하면 매번 지우고 새롭게 만드는 설정. 연습을 할때 좋다.
 > Entity class에 속성 추가하면 relation에 자동으로 추가된다.
 
-@Entity 맵핑
-Annotation 기반 설정
-@Entity는 자동으로 테이블로 맵핑 사실상 @Table Annotation이 생략되어 있음. 기본적으로 클래스 이름과 동일한 엔티티 사용
-@Entity(name="sdasad")으로 엔티티 맵핑 변경
-@Table에서 사용하는 기본 값이 Entity의 이름이다. 아무런 설정을 하지 않으면 기본적으로 클래스이름과 같은 entity맵핑.
+### @Entity 맵핑
+- Annotation 기반 설정
+- @Entity는 자동으로 테이블로 맵핑 사실상 @Table Annotation이 생략되어 있음. 기본적으로 클래스 이름과 동일한 엔티티 사용
+- @Entity(name="sdasad")으로 엔티티 맵핑 변경
+- @Table에서 사용하는 기본 값이 Entity의 이름이다. 아무런 설정을 하지 않으면 기본적으로 클래스이름과 같은 entity맵핑.
 
+#### db에서 User키워드가 있어서 사용할 수 없다.
+> @Entitiy(name = "fdsafsd") 의 맵핑은 맵핑되는 릴레이션의 정보를 바꾸는 것이 아니라, 사용될 Entity 클래스의 이름을 설정해 주는것. 엔티티 이름을 이와같은 방법을 통해 바꿀 수 있다.
+#### @Column(nullable = false, unique = true);
 
-db에서 User키워드가 있어서 사용할 수 없다. @Entitiy(name = "fdsafsd") 의 맵핑은 맵핑되는 릴레이션의 정보를 바꾸는 것이 아니라, 사용될 Entity 클래스의 이름을 설정해 주는것. 엔티티 이름을 이와같은 방법을 통해 바꿀 수 있다.
-
-@Column(nullable = false, unique = true);
-
-@Temporal 어노테이션
+### @Temporal 어노테이션
 ```
 @Temproal(TemporalType.TIMESTAMP)으로 설정하면 날짜 시간,
 @Temproal(TemporalType.TIME) - > 시간만.
-
-@Transient 를 추가하면 column으로 만들지 않는다
 ```
-
+### @Transient 를 추가하면 column으로 만들지 않는다
+```
 @Transient
-private String no; 라고 하면 테이블에 no 속성이 추가되지 않는다
-
+private String no;
+이렇게 선언 하면 테이블에 no 속성이 추가되지 않는다
+````
 Class ->  Entity Type
 vairable -> Value Type
 
