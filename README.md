@@ -280,7 +280,7 @@ private String no;
 - ValueÅ¸ÀÔ ¸ÅÇÎ.
   - @Embadable ¾î³ëÅ×ÀÌ¼Ç »ç¿ëÇÏ¿© Å¬·¡½º ÇÏ³ª Á¤ÀÇ, ±× Å¬·¡½º¸¦ value·Î °®´Â Å¬·¡½º¿¡¼­ private Adress temp ¶ó°í ¼±¾ğÇÏ¸é Address Å¬·¡½ºÀÇ ¿ä¼Ò°¡ dbÅ×ÀÌºíÀÇ ¼Ó¼ºÀ¸·Î Ãß°¡µÈ´Ù.
 
-### private Address adress·Î ¿À¹ö·Îµù ÇØ¼­ »ç¿ë °¡´É. AddressÀÇ street ¿ä¼Ò°¡ home_street¶ó´Â ÀÌ¸§À¸·Î µé¾î¿À°Ô µÈ´Ù.
+#### private Address adress·Î ¿À¹ö·Îµù ÇØ¼­ »ç¿ë °¡´É. AddressÀÇ street ¿ä¼Ò°¡ home_street¶ó´Â ÀÌ¸§À¸·Î µé¾î¿À°Ô µÈ´Ù.
 ```
 @Embeded
 @AttributeOverrodes({
@@ -298,71 +298,81 @@ private String no;
 - ¼­·Î ÂüÁ¶ÇÏ´Â ¾ç¹æÇâ °ü°è¸¦ ¸¸µé ¼öµµ ÀÖ´Ù. ¾çÂÊ¿¡ OneToMany, ManyToOneÀ» ¼±¾ğÇÏ¸é ¾ç¹æÇâ ¸ÊÇÎÀÌ¶ó°í »ı°¢ÇÒ ¼ö ÀÖÁö¸¸ ÀÌ°ÍÀº µÎ°³ÀÇ ´Ü¹æÇâ °ü°èÀÌ´Ù. ¾ç¹æÇâ °ü°è¸¦ ¼³Á¤ÇÏ·Á¸é µû·Î ¼³Á¤À» ÇØÁà¾ßÇÑ´Ù. ¾ç¹æÇâ °ü°è¸¦ ¼³Á¤ÇÏ·Á¸é @OneToMany(mappedBy = "owner")¸¦ Á¤ÀÇ ÇØ¾ßÇÏ¸ç mappedBy ´Â OneToManyÂÊ¿¡ Á¤ÀÇ.
 - ÀÌ¶§ °ü°è¸¦ ¼³Á¤½Ã¿¡ ¾çÂÊ¿¡ µÑ´Ù °ü°è¸¦ ¼³Á¤ÇØ ÁÖ¾î¾ß ÇÑ´Ù. @OneToManyÀÎ ÂÊ¿¡ .add.. ¸¦ ÇØÁÖ°í @ManyToOne¿¡ setOwner¼³Á¤À» ¾çÂÊÀ¸·Î ¼³Á¤ÇØÁÖ¾î¾ß Á¤»óÀûÀ¸·Î °ü°è Çü¼ºÀÌµÊ. ¾ç¹æÇâ °ü°èÀÎµ¥ ÇÑÂÊ¿¡¸¸ addÈ¤Àº set ÇØÁØ´Ù´Â°Ç ¸ÂÁö¾Ê´Â°Í. add´Â ÇÊ¼öÀûÀ¸·Î ¼öÇàÇØ¾ßÇÏ´Â ÄÚµå´Â ¾Æ´Ï´Ù. ÇÏÁö¸¸ °´Ã¼ÁöÇâÀûÀ¸·Î »ı°¢ÇßÀ»¶§ µÑ´Ù ÇÏ´Â°ÍÀÌ ÁÁ´Ù.
 - ÀÌ»óÀûÀÎ °ÍÀº Convenient method¸¦ ¸¸µé¾î »ç¿ëÇÏ´Â °Í.
+
 ```
-public addStudy(Study study)
-{
-  this.getStudies().add(study);
-  study.setOwner(this);
-}
+class StudyPerson{
 
-public removeStudy(Study study)
-{
-  this.getStudies().add(study);
-  study.setOwner(null);
+  public addStudy(Study study)
+  {
+    this.getStudies().add(study);
+    study.setOwner(this);
+  }
+
+  public removeStudy(Study study)
+  {
+    this.getStudies().remove(study);
+    study.setOwner(null);
+  }
 }
 ```
+#### EntityÀÇ »óÅÂ Cascade Option.
+- @OneToMany, @ManyToOne¿¡ Cascade ¿É¼ÇÀÌ ÀÖ´Ù.
+- cascade¶õ entityÀÇ »óÅÂº¯È­¸¦ ÀüÀÌ½ÃÅ°´Â °Í.
+- »óÅÂ´Â Å©°Ô 4°¡Áö°¡ ÀÖ´Ù.
+  - Transient
+  - Removed
+  - Persistant
+  - Detached
 
-EntityÀÇ »óÅÂ Cascade Option.
-@OneToMany, @ManyToOne¿¡ Cascade ¿É¼ÇÀÌ ÀÖ´Ù.
-cascade¶õ entityÀÇ »óÅÂº¯È­¸¦ ÀüÀÌ½ÃÅ°´Â °Í.
-»óÅÂ´Â Å©°Ô 4°¡Áö°¡ ÀÖ´Ù. Transient Removed Persistant Detached
-Transient : °´Ã¼°¡ db¿¡ ÀúÀåµÉÁö ¾ÈµÉÁö jpa, hibernate°¡ ÀüÇô ¸ğ¸£´Â »óÅÂ. saveÇÏ±â Àü.
-SAVE¸¦ ÇÏ¸é persistent»óÅÂ°¡ µÈ´Ù. save¸¦ ÇÑ´Ù°í °´Ã¼°¡ ¹Ù·Î µé¾î°¡´Â °ÍÀº ¾Æ´Ï´Ù. ÀÌ »óÅÂ·Î °ü¸®ÇÏ°í ÀÖ´Ù°¡ ÀÌÂë µÆÀ¸¸é db¿¡ ³Ö¾î¾ß °Ú´Ù. ÆÇ´ÜÇÏ´Â ±× ½ÃÁ¡¿¡ ÀúÀåÇÏ°Ô µÈ´Ù. save¸¦ È£ÃâÇß´Ù°í ÇØ¼­ ±× Áï½Ã insert Äõ¸®°¡ ¹ß»ıÇÏ´Â °ÍÀº ¾Æ´Ï´Ù. save¸¦ È£ÃâÇÏ¸é hibernate°¡ ¾Æ´Â »óÅÂ persistant 1Â÷Ä³½¬. ÀÎ½ºÅÏ½º°¡ cache°¡ µÈ »óÅÂ. ÀÌ»óÅÂ¿¡¼­ ´Ù½ÃÇÑ¹ø ÀÌ ÀÎ½ºÅÏ½º¸¦ ´Ş¶ó°í ÇÏ¸é ¼¿·ºÆ® Äõ¸®°¡ ¹ß»ıÇÏÁö ¾Ê´Â´Ù. cacheÇÏ°í ÀÖ´Â°É ÁÙ°Ô ÇÏ¸ç ÁØ´Ù. db¿¡¼­ ³ª¿À´Â°ÍÀÌ ¾Æ´Ô. ÀúÀåÀ» ÇÏÁöµµ ¾ÊÀº »óÅÂ¿¡¼­ ÁÖ´Â°Í. transactionÀÌ ³¡³ª´Â Áï commitÀÌ ÀÏ¾î³ª¸é, insertÄõ¸®°¡ ¹ß»ıÇÑ´Ù. -> Áß°£¿¡ °ªÀ» ¹Ù²Ù´Âµî ºÒÇÊ¿äÇÑ ¾×¼ÇÀ» ÃëÇÏÁö ¾Ê´Â ÀåÁ¡. °´Ã¼¸¦ °è¼Ó °¨½ÃÇÏ°í ÀÖ´Ù°¡ Æ®·£Àè¼ÇÀÌ ³¡³ª¸é Äõ¸® ¼öÇà. ( Dirty checking ÀÌ °´Ã¼ÀÇ º¯°æ»çÇ×À» °è¼Ó °¨ÁöÇÑ´Ù.)
+1. Transient : °´Ã¼°¡ db¿¡ ÀúÀåµÉÁö ¾ÈµÉÁö jpa, hibernate°¡ ÀüÇô ¸ğ¸£´Â »óÅÂ. saveÇÏ±â Àü. SAVE¸¦ ÇÏ¸é persistent»óÅÂ°¡ µÈ´Ù.
+> save¸¦ ÇÑ´Ù°í °´Ã¼°¡ ¹Ù·Î µé¾î°¡´Â °ÍÀº ¾Æ´Ï´Ù.
 
-removed»óÅÂ¿¡ ¸Ó¹°·¯ ÀÖ´Ù°¡ commitÀÌ ÀÏ¾î³¯¶§ »èÁ¦ÇÑ´Ù.
+2. ÀÌ »óÅÂ·Î °ü¸®ÇÏ°í ÀÖ´Ù°¡ ÀÌÂë µÆÀ¸¸é db¿¡ ³Ö¾î¾ß °Ú´Ù. ÆÇ´ÜÇÏ´Â ±× ½ÃÁ¡¿¡ ÀúÀåÇÏ°Ô µÈ´Ù. save¸¦ È£ÃâÇß´Ù°í ÇØ¼­ ±× Áï½Ã insert Äõ¸®°¡ ¹ß»ıÇÏ´Â °ÍÀº ¾Æ´Ï´Ù. save¸¦ È£ÃâÇÏ¸é hibernate°¡ ¾Æ´Â »óÅÂ persistant 1Â÷Ä³½¬. ÀÎ½ºÅÏ½º°¡ cache°¡ µÈ »óÅÂ.
+> ÀÌ»óÅÂ¿¡¼­ ´Ù½ÃÇÑ¹ø ÀÌ ÀÎ½ºÅÏ½º¸¦ ´Ş¶ó°í ÇÏ¸é ¼¿·ºÆ® Äõ¸®°¡ ¹ß»ıÇÏÁö ¾Ê´Â´Ù. cacheÇÏ°í ÀÖ´Â°É ÁÙ°Ô ÇÏ¸ç ÁØ´Ù. db¿¡¼­ ³ª¿À´Â°ÍÀÌ ¾Æ´Ô. ÀúÀåÀ» ÇÏÁöµµ ¾ÊÀº »óÅÂ¿¡¼­ ÁÖ´Â°Í.
 
- hibernate°¡ persistant »óÅÂ·Î °ü¸®ÇÏ°í ÀÖ´Ù.
-@OneToMany(cascade =  )
+3. transactionÀÌ ³¡³ª´Â Áï commitÀÌ ÀÏ¾î³ª¸é, insertÄõ¸®°¡ ¹ß»ıÇÑ´Ù. -> Áß°£¿¡ °ªÀ» ¹Ù²Ù´Âµî ºÒÇÊ¿äÇÑ ¾×¼ÇÀ» ÃëÇÏÁö ¾Ê´Â ÀåÁ¡. °´Ã¼¸¦ °è¼Ó °¨½ÃÇÏ°í ÀÖ´Ù°¡ Æ®·£Àè¼ÇÀÌ ³¡³ª¸é Äõ¸® ¼öÇà. ( Dirty checking ÀÌ °´Ã¼ÀÇ º¯°æ»çÇ×À» °è¼Ó °¨ÁöÇÑ´Ù.)
 
-¿¹¸¦µé¾î °Ô½Ã±Û°ú ´ñ±ÛÀÇ °ü°è. °Ô½Ã±ÛÀÌ »èÁ¦µÇ¸é ´ñ±Ûµµ »èÁ¦µÇ¾î¾ß ÇÑ´Ù.
+4. removed»óÅÂ¿¡ ¸Ó¹°·¯ ÀÖ´Ù°¡ commitÀÌ ÀÏ¾î³¯¶§ »èÁ¦ÇÑ´Ù.
+5. hibernate°¡ persistant »óÅÂ·Î °ü¸®ÇÏ°í ÀÖ´Ù.
+
+#### Cascade
+> ¿¹¸¦µé¾î °Ô½Ã±Û°ú ´ñ±ÛÀÇ °ü°è. °Ô½Ã±ÛÀÌ »èÁ¦µÇ¸é ´ñ±Ûµµ »èÁ¦µÇ¾î¾ß ÇÑ´Ù.
 ```
 @Entitiy
 public class Post{
 
-@id @GeneratedValue
-private long id
+  @id @GeneratedValue
+  private long id
 
-private Set<comment> comments = new HashSet<>();
+  @OneToMany(mappedby = "post")
+  private Set<comment> comments = new HashSet<>();
 
-public void addComment(Comment comment){
-  this.getComments.add(comment);
-  comment.setPost(this)
+  public void addComment(Comment comment){
+    this.getComments.add(comment);
+    comment.setPost(this)
 }
 
 @Entity
 public class Comment{
 
-@id @GeneratedValue
-private long id;
+  @id @GeneratedValue
+  private long id;
 
-@OneToMany(mappedby = "post")
-private Post post;
 
+  private Post post;
 
 }
 
 @OneToMany(cascade =CascadeType.PERSIST)·Î ¼³Á¤À» ÇÏ¸é. post.save()·Î ÀúÀåÀ» ÇÒ¶§ ÀÌ persistant¸¦ ¾Ë·ÁÁÖ¼¼¿ä. transient¿¡¼­ ³Ñ¾î°¥¶§ °°ÀÌ persistant°¡µÇ°í ÀúÀåÀÌ µÈ´Ù. CascadeType.REMOVE ¼³Á¤Àº Áö¿ï¶§ Æ÷½ºÆ®¸¦ »èÁ¦ÇÏ´Â¼ø°£ removed»óÅÂ°¡ ÀüÆÄ°¡ µÇ°í commentµµ removed»óÅÂ°¡ µÅ¼­ °°ÀÌ Áö¿öÁØ´Ù. ±×³É CASCADETYE.ALL·Î ÀüºÎ ÀüÆÄÇÏµµ·Ï ¼³Á¤ÇÏ¸é ÆíÇÏ´Ù.
 ```
 
-Fetch ¿¬°ü°ü°èÀÇ ¿£Æ¼Æ¼¸¦ ¾î¶»°Ô °¡Á®¿Ã°ÍÀÎ°¡. Áö(Eager?) ³ªÁß¿¡(Lazy?) .
+- Fetch ¿¬°ü°ü°èÀÇ ¿£Æ¼Æ¼¸¦ ¾î¶»°Ô °¡Á®¿Ã°ÍÀÎ°¡. Áö(Eager?) ³ªÁß¿¡(Lazy?) .
+  - OneToMany´Â ±âº»ÀûÀ¸·Î Lazy ¸¹À¸´Ï±î.
+  - ManyToOneÀº ±âº»ÀûÀ¸·Î Eager. »ı°¢ÇØº¸¸é ÇÕ¸®ÀûÀÌ´Ù.
+  - ÀÌ default¼³Á¤ lazy·Î ÀÎÇØ, ¿¹¸¦µé¾î post¿¡ ÀûÇôÀÖ´Â comment·Î °¡Á®¿Ã¶§ n+1¼¿·ºÆ® ¿¡·¯°¡ »ı±æ¼ö ÀÖ´Ù. ÀÌ·± fetchÀü·«À» Àß Á¤ÇÏ´Â°Ô ¼º´É¿¡ Å« ¿µÇâÀ» ¹ÌÄ§.
 
-OneToMany´Â ±âº»ÀûÀ¸·Î Lazy ¸¹À¸´Ï±î.
-ManyToOneÀº ±âº»ÀûÀ¸·Î Eager. »ı°¢ÇØº¸¸é ÇÕ¸®ÀûÀÌ´Ù.
-
-ÀÌ default¼³Á¤ lazy·Î ÀÎÇØ, ¿¹¸¦µé¾î post¿¡ ÀûÇôÀÖ´Â comment·Î °¡Á®¿Ã¶§ n+1¼¿·ºÆ® ¿¡·¯°¡ »ı±æ¼ö ÀÖ´Ù. ÀÌ·± fetchÀü·«À» Àß Á¤ÇÏ´Â°Ô ¼º´É¿¡ Å« ¿µÇâÀ» ¹ÌÄ§.
-
-½ºÇÁ¸µ µ¥ÀÌÅÍ JPA.
-data access object ¿ªÇÒÀ» ÇÏ´Â repository¸¦ Á¤ÀÇ.
+#### ½ºÇÁ¸µ µ¥ÀÌÅÍ JPA.
+> data access object ¿ªÇÒÀ» ÇÏ´Â repository¸¦ Á¤ÀÇ.
 
 ```
 @Repository
@@ -388,7 +398,7 @@ public class PostRepository{
 ÀÌ·¸°Ô Àß ¾²Áö ¾Ê´Â´Ù.
 ```
 
-ÈÎ¾À Æí¸®ÇÑ ¹æ¹ı. ÃÖ±Ù¿¡ °¡Àå Áøº¸µÈ ÇüÅÂ
+- ÈÎ¾À Æí¸®ÇÑ ¹æ¹ı. ÃÖ±Ù¿¡ °¡Àå Áøº¸µÈ ÇüÅÂ
 
 ```
 @Repository
@@ -398,57 +408,54 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 }
 ```
 
-¿ø·¡´Â @EnableJpaRepositories¸¦ ºÙ¿©¾ß ÇÏ´Âµ¥ @SpringBootApplicationÀÌ ÀÚµ¿À¸·Î ¼³Á¤ ÇØ ÁØ´Ù.
+- ¿ø·¡´Â @EnableJpaRepositories¸¦ ºÙ¿©¾ß ÇÏ´Âµ¥ @SpringBootApplicationÀÌ ÀÚµ¿À¸·Î ¼³Á¤ ÇØ ÁØ´Ù.
 
-Äõ¸®¸¦ ¶ç¿üÀ»¶§ ?·Î ³ªÅ¸³ª´Â °ªÀ» º¸´Â ¹æ¹ı. Äõ¸® È®ÀÎ¾ÈÇÏ°í ÇÒ°Å¸é hibernate¸¦ ¾²Áö¸¶¶ó. ¼º´É¿¡ ¹®Á¦°¡ »ı±æ ¼ö ÀÖ´Ù.
+- Äõ¸®¸¦ ¶ç¿üÀ»¶§ ?·Î ³ªÅ¸³ª´Â °ªÀ» º¸´Â ¹æ¹ı. Äõ¸® È®ÀÎ¾ÈÇÏ°í ÇÒ°Å¸é hibernate¸¦ ¾²Áö¸¶¶ó. ¼º´É¿¡ ¹®Á¦°¡ »ı±æ ¼ö ÀÖ´Ù.
 ```
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=TransactionRequiredException
 loggin.level.org.hibernate.type.descriptor.sql=trace
 ```
 
-SpringData Common
-»ó¼Ó¹Ş¾Æ¼­ Interface¸¦ ¸¸µç JpaRepository´Â Repository(±â´É x), CrudRepository, PagingAndSortingRepository //½ºÇÁ¸µµ¥ÀÌÅÍ Common// ¿¡¼­ ±â´ÉÀ» ´õ Ãß°¡ÇÑ°Í.
-
+#### SpringData Common
+> »ó¼Ó¹Ş¾Æ¼­ Interface¸¦ ¸¸µç JpaRepository´Â Repository(±â´É x), CrudRepository, PagingAndSortingRepository //½ºÇÁ¸µµ¥ÀÌÅÍ Common// ¿¡¼­ ±â´ÉÀ» ´õ Ãß°¡ÇÑ°Í.
 ÀÌ·¯ÇÑ °ÍµéÀº @NoRepositoryBean AnnotationÀÌ ºÙ¾îÀÖ¾î ºóÀ» ¸¸µé¾î¼­ µî·ÏÇÏ´Â°ÍÀ» ¹æÁöÇÑ´Ù. (ÀÌ°ÍÀ» »ó¼Ó¹Ş¾Æ »ç¿ëÇÏ¶ó´Â °Í. Áß°£´Ü°è Repository, ½ÇÁ¦ Repository°¡ ¾Æ´ÔÀ» ÀÇ¹Ì)
 
-CrudRepository : Save, SaveAll, findById, existsById(Á¸ÀçÀ¯¹« ÆÇ´Ü), findAll, findAllById
+#### CrudRepository : Save, SaveAll, findById, existsById(Á¸ÀçÀ¯¹« ÆÇ´Ü), findAll, findAllById ....
+> @TestÀÇ °æ¿ì´Â ¾îÂ÷ÇÇ ¸ğµÎ rollbackÀÌ±â ¶§¹®¿¡ hibernate°¡ ½ÇÁ¦·Î Äõ¸®¸¦ ³¯¸®Áö ¾Ê´Â´Ù.
 
-@TestÀÇ °æ¿ì´Â ¾îÂ÷ÇÇ ¸ğµÎ rollbackÀÌ±â ¶§¹®¿¡ hibernate°¡ ½ÇÁ¦·Î Äõ¸®¸¦ ³¯¸®Áö ¾Ê´Â´Ù.
+- PagingAndSortingRepository : findAll(Pageable page)
 
-PagingAndSortingRepository : findAll(Pageable page)
-postRepository.findAll(PageRequest.of(0,10)) new PageRequest ¿¡¼­ PageRequest.of·Î ¹Ù²ñ. deprecated°¡ ¹ß»ıÇÑ´Ù.
+```
+postRepository.findAll(PageRequest.of(0,10))
+new PageRequest ¿¡¼­ PageRequest.of·Î ¹Ù²ñ. deprecated°¡ ¹ß»ıÇÑ´Ù.
+```
 
-nullÃ³¸®
-OptionalÀº nullÀÌ ¾ø´Ù. isEmpty»ç¿ë.
+- Query
+  - ±âº»ÀûÀÎ naming ±ÔÄ¢À¸·Î ÇÔ¼ö»ç¿ë, Á÷Á¢ ¸¸µé°íÀÚ ÇÒ¶§´Â @Query Annotation »ç¿ë. ±ÔÄ¢ Âü°í.
 
-Query¸¸µé±â
-±âº»ÀûÀÎ naming ±ÔÄ¢À¸·Î ÇÔ¼ö»ç¿ë, Á÷Á¢ ¸¸µé°íÀÚ ÇÒ¶§´Â @Query Annotation »ç¿ë. ±ÔÄ¢ Âü°í.
+- Like¿Í ºñ½ÁÇÑ ±â´ÉÀ» ÇÏ´Â Containµµ ÀÖ´Ù.
+  - findByCommentContains¿Í °°ÀÌ »ç¿ë °¡´É -> ÀÌ¿Í°°ÀÌ »ç¿ëÇÏ¸é Like Query°¡ ¹ß»ıÇÑ´Ù.
 
-Like¿Í ºñ½ÁÇÑ ±â´ÉÀ» ÇÏ´Â Containµµ ÀÖ´Ù.
-findByCommentContains¿Í °°ÀÌ »ç¿ë °¡´É -> ÀÌ¿Í°°ÀÌ »ç¿ëÇÏ¸é Like Query°¡ ¹ß»ıÇÑ´Ù.
+- Async ¾î³ëÅ×ÀÌ¼ÇÀ» »ç¿ëÇÏ¸é ºñµ¿±â·Î Ã³¸®°¡´É.¼º´ÉÀ» ÃÖÀûÈ­ ÇÏ·Á¸é ºñµ¿±â Ã³¸®º¸´Ù, Äõ¸®¸¦ ÃÖÀûÈ­ ÇÏ´Â°ÍÀÌ ¼º´É°³¼±¿¡ ´õ ÁÁ´Ù.
+  - ºñµ¿±â Äõ¸®´Â °¡±ŞÀû ¾È¾²´Â°ÍÀÌ ÁÁÀ½
 
-Async ¾î³ëÅ×ÀÌ¼ÇÀ» »ç¿ëÇÏ¸é ºñµ¿±â·Î Ã³¸®°¡´É.¼º´ÉÀ» ÃÖÀûÈ­ ÇÏ·Á¸é ºñµ¿±â Ã³¸®º¸´Ù, Äõ¸®¸¦ ÃÖÀûÈ­ ÇÏ´Â°ÍÀÌ ¼º´É°³¼±¿¡ ´õ ÁÁ´Ù.
-ºñµ¿±â Äõ¸®´Â °¡±ŞÀû ¾È¾²´Â°ÍÀÌ ÁÁÀ½
+#### Custom Repository
+>Á¢¹Ì»ç·Î Impl ºÙÀÌ´Â °ÍÀÌ º¸ÆíÀû. Ä¿½ºÅÒ 'ÀÎÅÍÆäÀÌ½º'¸¦ ¸¸µé°í, ±×µÚ¿¡ ImplÀÌ¶ó´Â Á¢¹Ì»ç¸¦ ºÙÀÎ '±¸ÇöÃ¼'¸¦ ±¸ÇöÇÑ´Ù. Impl·Î ¼³Á¤µÇ¾î ÀÖ±â ¶§¹®¿¡ ¹«Á¶°Ç ImplÀ» ½á¾ßÇÔ
 
-Custom Repository
-Á¢¹Ì»ç·Î Impl ºÙÀÌ´Â °ÍÀÌ º¸ÆíÀû.
-Ä¿½ºÅÒ 'ÀÎÅÍÆäÀÌ½º'¸¦ ¸¸µé°í, ±×µÚ¿¡ ImplÀÌ¶ó´Â Á¢¹Ì»ç¸¦ ºÙÀÎ '±¸ÇöÃ¼'¸¦ ±¸ÇöÇÑ´Ù. Impl·Î ¼³Á¤µÇ¾î ÀÖ±â ¶§¹®¿¡ ¹«Á¶°Ç ImplÀ» ½á¾ßÇÔ
+- Insert µÚ¿¡ Select Delete°¡ ÀÖ´Â °æ¿ì, Select°¡ ¾øÀ¸¸é Äõ¸®°¡ ¹ß»ıÇÏÁö ¾ÊÁö¸¸ Select°¡ ÀÖ´Â°æ¿ì Insert°¡ Select¿¡ ¿µÇâÀ» ÁÙ ¼ö ÀÖÀ¸¹Ç·Î InsertÄõ¸®°¡ ¹ß»ıÇÔ.
+- µ¥ÀÌÅÍº£ÀÌ½º¿¡ delete ½ÌÅ© ¾ÈÇÏ´Â ÀÌÀ¯ : ¾îÂ÷ÇÇ ·Ñ¹é ¿¬»êÀÌ±â ¶§¹®¿¡ delete Äõ¸® ¹ß»ıÇÏÁö ¾ÊÀ½.
 
-Insert µÚ¿¡ Select Delete°¡ ÀÖ´Â °æ¿ì, Select°¡ ¾øÀ¸¸é Äõ¸®°¡ ¹ß»ıÇÏÁö ¾ÊÁö¸¸ Select°¡ ÀÖ´Â°æ¿ì Insert°¡ Select¿¡ ¿µÇâÀ» ÁÙ ¼ö ÀÖÀ¸¹Ç·Î InsertÄõ¸®°¡ ¹ß»ıÇÔ.
+- JPA repository
+  - @SpringBootApplication ¾î³ëÅ×ÀÌ¼ÇÀÌ ÀÖ´Â°÷ºÎÅÍ Å½»öÀ» ½ÃÀÛÇÑ´Ù.
+  - @Repository ¶ó´Â ¾î³ëÅ×ÀÌ¼ÇÀ» ºÙÀÌ±âµµ ÇÏ´Âµ¥ ÀÌ°ÍÀº Áßº¹ÀÌ´Ù. JpaRepositoryÀÇ ±¸ÇöÃ¼¿¡ @Repository AnnotationÀÌ ÀÖ±â¶§¹®¿¡ ºÙÀÌÁö ¾Ê¾Æµµ µÈ´Ù. @Repository¾î³ëÅ×ÀÌ¼ÇÀÌ ºÙ¾îÁ® ÀÖÀ¸¸é ¿¹¿Ü¸¦ DataAccessExceptionÀ¸·Î º¯È¯ ÇØ ÁÖ´Â ÀåÁ¡ÀÌ ÀÖ´Ù.
 
-µ¥ÀÌÅÍº£ÀÌ½º¿¡ delete ½ÌÅ© ¾ÈÇÏ´Â ÀÌÀ¯ : ¾îÂ÷ÇÇ ·Ñ¹é ¿¬»êÀÌ±â ¶§¹®¿¡ delete Äõ¸® ¹ß»ıÇÏÁö ¾ÊÀ½.
+- ¾ÆÀÌµğ¿¡ @GeneratedValue ¸¦ ºÙ¿©ÁÖ¸é ¾ÆÀÌµğ¸¦ ÀÚµ¿À¸·Î »ı¼º ÇØ ÁØ´Ù. »©¸é ¾ÆÀÌµğ¸¦ Á÷Á¢ Á¤ÇØÁà¾ßÇÔ.
 
-JPA repository
-@SpringBootApplication ¾î³ëÅ×ÀÌ¼ÇÀÌ ÀÖ´Â°÷ºÎÅÍ Å½»öÀ» ½ÃÀÛÇÑ´Ù.
-@Repository ¶ó´Â ¾î³ëÅ×ÀÌ¼ÇÀ» ºÙÀÌ±âµµ ÇÏ´Âµ¥ ÀÌ°ÍÀº Áßº¹ÀÌ´Ù. JpaRepositoryÀÇ ±¸ÇöÃ¼¿¡ @Repository AnnotationÀÌ ÀÖ±â¶§¹®¿¡ ºÙÀÌÁö ¾Ê¾Æµµ µÈ´Ù. @Repository¾î³ëÅ×ÀÌ¼ÇÀÌ ºÙ¾îÁ® ÀÖÀ¸¸é ¿¹¿Ü¸¦ DataAccessExceptionÀ¸·Î º¯È¯ ÇØ ÁÖ´Â ÀåÁ¡ÀÌ ÀÖ´Ù.
+#### JpaRepository.save ¿¡ ´ëÇØ.
+- ´Ü¼øÇÑ save±â´É »Ó¸¸ ¾Æ´Ï¶ó, ±× °´Ã¼°¡ »õ·Î¿î °´Ã¼ÀÎÁö, ¾Æ´ÑÁö¸¦ ÆÇ´ÜÇØ¼­ »õ·Î¿î °´Ã¼°¡ ¾Æ´Ò°æ¿ì entity managerÀÇ mergeÂÊÀ¸·Î º¸³»¼­ detatched »óÅÂ¸¦ persistent »óÅÂ·Î º¸³½´Ù. ¿¹¸¦ µé¾î °°Àº ¾ÆÀÌµğ·Î new entity¸¦ »ı¼ºÇÏ¸é »õ·Î insert°¡ ¾Æ´Ï¶ó updateÄõ¸®°¡ ¹ß»ı
 
-¾ÆÀÌµğ¿¡ @GeneratedValue ¸¦ ºÙ¿©ÁÖ¸é ¾ÆÀÌµğ¸¦ ÀÚµ¿À¸·Î »ı¼º ÇØ ÁØ´Ù. »©¸é ¾ÆÀÌµğ¸¦ Á÷Á¢ Á¤ÇØÁà¾ßÇÔ.
-
-JpaRepository.save ¿¡ ´ëÇØ.
-´Ü¼øÇÑ save±â´É »Ó¸¸ ¾Æ´Ï¶ó, ±× °´Ã¼°¡ »õ·Î¿î °´Ã¼ÀÎÁö, ¾Æ´ÑÁö¸¦ ÆÇ´ÜÇØ¼­ »õ·Î¿î °´Ã¼°¡ ¾Æ´Ò°æ¿ì entity managerÀÇ mergeÂÊÀ¸·Î º¸³»¼­ detatched »óÅÂ¸¦ persistent »óÅÂ·Î º¸³½´Ù. ¿¹¸¦ µé¾î °°Àº ¾ÆÀÌµğ·Î new entity¸¦ »ı¼ºÇÏ¸é »õ·Î insert°¡ ¾Æ´Ï¶ó updateÄõ¸®°¡ ¹ß»ı
-
-¹«Á¶°Ç ÀÎ½ºÅÏ½º¸¦ »õ·Ó°Ô ¸®ÅÏ¹Ş¾Æ »ç¿ëÇÏ´Â°ÍÀÌ ÇÕ¸®ÀûÀÌ´Ù. persist »óÅÂÀÇ °´Ã¼¸¦ »ç¿ëÇÏ´Â °ÍÀº ±× °´Ã¼ »óÅÂÀÇ º¯È­¸¦ ÃßÀûÇÏ°í ±× °´Ã¼»óÅÂÀÇ º¯È­°¡ ÇÊ¿äÇÑ °æ¿ì¿¡ ¹İ¿µÀÌ µÈ´Ù.
+- ¹«Á¶°Ç ÀÎ½ºÅÏ½º¸¦ »õ·Ó°Ô ¸®ÅÏ¹Ş¾Æ »ç¿ëÇÏ´Â°ÍÀÌ ÇÕ¸®ÀûÀÌ´Ù. persist »óÅÂÀÇ °´Ã¼¸¦ »ç¿ëÇÏ´Â °ÍÀº ±× °´Ã¼ »óÅÂÀÇ º¯È­¸¦ ÃßÀûÇÏ°í ±× °´Ã¼»óÅÂÀÇ º¯È­°¡ ÇÊ¿äÇÑ °æ¿ì¿¡ ¹İ¿µÀÌ µÈ´Ù.
  ¸®ÅÏÇØ¼­ ¸®ÅÏ°ªÀ» ¾²´Â°ÍÀ» ½À°üÀ» µéÀÌÀÚ. °ª º¯°æÀÌ Àß ¾ÈµÇ´Â °æ¿ì°¡ »ı±æ ¼ö ÀÖ´Ù.
 
  ```
@@ -466,49 +473,38 @@ savePost.setTitle("gigi")
  ```
 
 
-JPA Äõ¸® ¸Ş¼Òµå
-@NamedQuery ±â´É.
+- JPA Äõ¸® ¸Ş¼Òµå
+  - @NamedQuery ±â´É.
 ```
 @NamedQuery(name = "Entity.function" , query = "SELECT [] FROM.....")
 ```
 
-@Query AnnotationÀ¸·Î native Äõ¸® »ç¿ë.
-
-Äõ¸® ¸Ş¼Òµå Sort
+- @Query AnnotationÀ¸·Î native Äõ¸® »ç¿ë.
+  - Äõ¸® ¸Ş¼Òµå Sort
 ```
 findByTitle(String title,Sort sort)
 ```
-¸¦ Ãß°¡ÇÏ¸é Sort°¡´É . ÇÁ·ÎÆÛÆ¼ ¶Ç´Â alias°¡ ¿£Æ¼Æ¼¿¡ ¾ø´Â °æ¿ì¿¡´Â ¿¹¿Ü°¡ ¹ß»ıÇÑ´Ù. property³ª alias¸¸ »ç¿ëÇØ¾ß ÇÑ´Ù.
+#### ¸¦ Ãß°¡ÇÏ¸é Sort°¡´É . ÇÁ·ÎÆÛÆ¼ ¶Ç´Â alias°¡ ¿£Æ¼Æ¼¿¡ ¾ø´Â °æ¿ì¿¡´Â ¿¹¿Ü°¡ ¹ß»ıÇÑ´Ù. property³ª alias¸¸ »ç¿ëÇØ¾ß ÇÑ´Ù.
 
 ```
 findByTitle(..Sort.By("title"))
 ```
-
-ÇÏÁö¸¸ JpaSort.unsafe()ÇÔ¼ö¸¦ »ç¿ëÇÏ¸é ÇÔ¼ö È£ÃâÀ» »ç¿ëÇÒ ¼ö ÀÖ´Ù.
+#### ÇÏÁö¸¸ JpaSort.unsafe()ÇÔ¼ö¸¦ »ç¿ëÇÏ¸é ÇÔ¼ö È£ÃâÀ» »ç¿ëÇÒ ¼ö ÀÖ´Ù.
 ```
 findByTitle(JpaSort.unsafe("LENGTH('title')"))
 ```
-¿Í °°ÀÌ »ç¿ëÇÏ´Â°ÍÀº °¡´É
+#### ¿Í °°ÀÌ »ç¿ëÇÏ´Â°ÍÀº °¡´É
 
-Named parameter
-@Query("SELECT P FROM Post AS p WHERE p.title = :title")
-List<Post> findByTitle(@Param("title")Stirng title, Sort sort)
-
-SpEL(Spring expression language)
-¿£Æ¼Æ¼ ÀÌ¸§À» #{#entityName}(³­ ¿Ö ¾²´ÂÁö Àß ¸ğ¸£°ÚÀ½)
-
-Update Äõ¸®
-º¸Åë JPA¿¡¼­ ¸Ş¼Òµå ÀÌ¸§ À¸·Î »ç¿ëÇÏ´Â°Í¿¡¼­ ¾÷µ¥ÀÌÆ®´Â Àß Ã£¾Æº¼ ¼ö ¾ø¾ú´Ù.
- Update Äõ¸®¸¦ Á÷Á¢ Á¤ÀÇ hibernate¿¡¼­ SelectÇÏ¿© °ªÀ» ¹Ù²ãÁÖ´Â°Í ¸¸À¸·Î hibernate°¡ ¾Ë¾Æ¼­ updateÄõ¸®¸¦ ³¯·ÁÁÖ±â ¶§¹®¿¡ ±»ÀÌ UpdateÄõ¸®¸¦ »ç¿ëÇÏ´Â °æ¿ì´Â Àß ¾ø´Ù. ÃßÃµÇÏÁö ¾ÊÀ½
-
-ÁÖ·Î ¾÷µ¥ÀÌÆ®´Â persist »óÅÂ·Î °ü¸® ÇÏ´Ù°¡ º¯È­°¡ ÀÏ¾î³ª¼­ db¿¡ ½ÌÅ©¸¦ ÇØ¾ß°Ú´Ù ½ÍÀ»¶§ flush°¡ ÀÏ¾î³ª¼­ °´Ã¼»óÅÂ¸¦ db¿¡ µ¿±âÈ­ ÇÑ´Ù. ±×¶§ update¸¦ ¼öÇàÇÏ´Âµ¥ ±×·¡¼­ ±»ÀÌ updateÄõ¸®¸¦ Á÷Á¢ ±¸ÇöÇÒ ÇÊ¿ä´Â °ÅÀÇ ¾ø´Ù.
+- Update Äõ¸®
+  - º¸Åë JPA¿¡¼­ ¸Ş¼Òµå ÀÌ¸§ À¸·Î »ç¿ëÇÏ´Â°Í¿¡¼­ ¾÷µ¥ÀÌÆ®´Â Àß Ã£¾Æº¼ ¼ö ¾ø¾ú´Ù.
+  - Update Äõ¸®¸¦ Á÷Á¢ Á¤ÀÇ hibernate¿¡¼­ SelectÇÏ¿© °ªÀ» ¹Ù²ãÁÖ´Â°Í ¸¸À¸·Î hibernate°¡ ¾Ë¾Æ¼­ updateÄõ¸®¸¦ ³¯·ÁÁÖ±â ¶§¹®¿¡ ±»ÀÌ UpdateÄõ¸®¸¦ »ç¿ëÇÏ´Â °æ¿ì´Â Àß ¾ø´Ù. ÃßÃµÇÏÁö ¾ÊÀ½
+  - ÁÖ·Î ¾÷µ¥ÀÌÆ®´Â persist »óÅÂ·Î °ü¸® ÇÏ´Ù°¡ º¯È­°¡ ÀÏ¾î³ª¼­ db¿¡ ½ÌÅ©¸¦ ÇØ¾ß°Ú´Ù ½ÍÀ»¶§ flush°¡ ÀÏ¾î³ª¼­ °´Ã¼»óÅÂ¸¦ db¿¡ µ¿±âÈ­ ÇÑ´Ù. ±×¶§ update¸¦ ¼öÇàÇÏ´Âµ¥ ±×·¡¼­ ±»ÀÌ updateÄõ¸®¸¦ Á÷Á¢ ±¸ÇöÇÒ ÇÊ¿ä´Â °ÅÀÇ ¾ø´Ù.
 
 ```
 @Modifying À» ²À Àû¾îÁà¾ß ÇÑ´Ù.
 @Query("UPDATE SET...")
 ```
-
-³»°¡ ¿¹Àü¿¡ °í»ıÇß´ø ºÎºĞ
+> ³»°¡ ¿¹Àü¿¡ °í»ıÇß´ø ºÎºĞ
 ```
 int update = ...updateTitle(..)
 .
@@ -516,9 +512,10 @@ int update = ...updateTitle(..)
 .
 findById¸¦ ÇØµµ Á¦´ë·Î º¯°æÀÌ µÇÁö ¾Ê´ø °æ¿ì°¡ ÀÖ¾ú´Ù.
 ```
-ÀÌÀ¯ -> Update¸¦ ÇÑ´ÙÀ½¿¡ find¸¦ ÇØµµ Select¸¦ ÇÏÁö ¾Ê´Â´Ù. ¿Ö ±×·¯³Ä¸é Àú °´Ã¼´Â persist¿¡ ±×´ë·Î ÀÖ´Ù. Æ®·£Àè¼ÇÀÌ ³¡³ªÁö ¾Ê¾Ò±â ¶§¹®¿¡ Ä³½¬, persist context°¡ ºñ¿öÁöÁö ¾Ê¾Ò±â ¶§¹®¿¡ persistant °´Ã¼ÀÌ´Ù. ±×»óÅÂ·Î find ÇØºÃÀÚ db·Î °¡Áö ¾Ê°í Ä³½¬¿¡ ÀÖ´ø°ÍÀ» ±×´ë·Î °¡Á®¿Â´Ù. ºñ·Ï updateÄõ¸®´Â ¹ß»ıÇßÁö¸¸ ¾ÆÁ÷ persistant »óÅÂ¿¡ ³²¾ÆÀÖ´ø °´Ã¼´Â ±×´ë·Î ¹Ù²î±â Àü »óÅÂÀÌ±â ¶§¹®¿¡ ¹Ù²îÁö ¾ÊÀº°ÍÃ³·³ °¡Á®¿Â´Ù.
 
-@Modifying(clearAutomatically = true, flushAutomatically = true) ¿É¼ÇÀ¸·Î Å¬¸®¾î¸¦ ÇØ¾ß Á¦´ë·Î ¹Ş¾Æº¼ ¼ö ÀÖ´Ù. ÀÌ´Â ¾÷µ¥ÀÌÆ® Äõ¸®¸¦ ½ÇÇàÇßÀ»¶§, ±× ÀÌÈÄÇØ persistant context Å¬¸®¾î, flush¸¦ ÇØÁÖ´Â ±â´É ±×µ¿¾È persitant context¾È¿¡ ÀÖ´ø Ä³½¬¸¦ ºñ¿öÁØ´Ù. ºñ¿öÁà¾ß findÇÒ¶§ db¿¡¼­ »õ·Î °¡Á®¿Â´Ù.
+* ÀÌÀ¯ -> Update¸¦ ÇÑ´ÙÀ½¿¡ find¸¦ ÇØµµ Select¸¦ ÇÏÁö ¾Ê´Â´Ù. ¿Ö ±×·¯³Ä¸é Àú °´Ã¼´Â persist¿¡ ±×´ë·Î ÀÖ´Ù. Æ®·£Àè¼ÇÀÌ ³¡³ªÁö ¾Ê¾Ò±â ¶§¹®¿¡ Ä³½¬, persist context°¡ ºñ¿öÁöÁö ¾Ê¾Ò±â ¶§¹®¿¡ persistant °´Ã¼ÀÌ´Ù. ±×»óÅÂ·Î find ÇØºÃÀÚ db·Î °¡Áö ¾Ê°í Ä³½¬¿¡ ÀÖ´ø°ÍÀ» ±×´ë·Î °¡Á®¿Â´Ù. ºñ·Ï updateÄõ¸®´Â ¹ß»ıÇßÁö¸¸ ¾ÆÁ÷ persistant »óÅÂ¿¡ ³²¾ÆÀÖ´ø °´Ã¼´Â ±×´ë·Î ¹Ù²î±â Àü »óÅÂÀÌ±â ¶§¹®¿¡ ¹Ù²îÁö ¾ÊÀº°ÍÃ³·³ °¡Á®¿Â´Ù.
+
+* @Modifying(clearAutomatically = true, flushAutomatically = true) ¿É¼ÇÀ¸·Î Å¬¸®¾î¸¦ ÇØ¾ß Á¦´ë·Î ¹Ş¾Æº¼ ¼ö ÀÖ´Ù. ÀÌ´Â ¾÷µ¥ÀÌÆ® Äõ¸®¸¦ ½ÇÇàÇßÀ»¶§, ±× ÀÌÈÄÇØ persistant context Å¬¸®¾î, flush¸¦ ÇØÁÖ´Â ±â´É ±×µ¿¾È persitant context¾È¿¡ ÀÖ´ø Ä³½¬¸¦ ºñ¿öÁØ´Ù. ºñ¿öÁà¾ß findÇÒ¶§ db¿¡¼­ »õ·Î °¡Á®¿Â´Ù.
 
 ÀÌ ¹æ¹ıÀ» ÃßÃµÇÏÁö ¾Ê´Â´Ù. deleteµµ ÃßÃµÇÏÁö ¾Ê´Â´Ù.
 ```
@@ -532,44 +529,31 @@ public void savePost(){
 Post Spring = savePost()
 Spring.setTitle("hibernate")
 ```
-±×³É ÀÌ·¸°Ô ¾²´Â°Ô ÈÎ¾ÀÁÁ´Ù. ¶È°°ÀÌ updateÄõ¸®°¡ ³¯¾Æ°¡¸ç º¯°æ»çÇ×À» db¿¡ ÀúÀå±îÁö ÇØÁØ´Ù.
-³»°¡ È¥ÀÚ ÇÏ´Â ÇÁ·ÎÁ§Æ® ¿¡¼­´Â Àû¾îµµ @Query("Update...")¸¦ ¾µ ÇÊ¿ä´Â ¾øÀ»°Í °°´Ù.
+#### ±×³É ÀÌ·¸°Ô ¾²´Â°Ô ÈÎ¾ÀÁÁ´Ù. ¶È°°ÀÌ updateÄõ¸®°¡ ³¯¾Æ°¡¸ç º¯°æ»çÇ×À» db¿¡ ÀúÀå±îÁö ÇØÁØ´Ù. ³»°¡ È¥ÀÚ ÇÏ´Â ÇÁ·ÎÁ§Æ® ¿¡¼­´Â Àû¾îµµ @Query("Update...")¸¦ ¾µ ÇÊ¿ä´Â ¾øÀ»°Í °°´Ù.
 
-Entity Graph
-
-transaction ¾È, cache¸¦ Å¬¸®¾îÇÏÁö ¾Ê¾ÒÀ¸¸é persistant »óÅÂ´Ù.
-
+#### transaction ¾È, cache¸¦ Å¬¸®¾îÇÏÁö ¾Ê¾ÒÀ¸¸é persistant »óÅÂ´Ù.
 ```
 @NameEntityGraph(name = "comment.post",
 attributeNodes = @NameAttributeNode("post"))
 
 @EntityGraph(value = "Comment.post")
 ```
-¼³Á¤ÇÑ Entity¸¦  EagerMode·Î °¡Á®¿Â´Ù. ¼³Á¤ ¾ÈµÇ¾îÀÖ´Â°ÍÀº ±âº»Àü·«À¸·Î. @ManyToOne LAZYÀÇ °æ¿ì´Â ¿¬°ü °ü°è°¡ ¼³Á¤µÇÀÖ´Â EntityÁ¤º¸¸¦ ÇÊ¿äÇÒ¶§¸¸... Eager mode´Â ÇÊ¿äÇÏÁö ¾Ê´õ¶óµµ ÀÏ´Ü ´Ù °¡Á®¿È... ±î¸Ô¾úÀ½..
 
-Projection.
-µ¥ÀÌÅÍÀÇ ¼Ó¼ºÀÌ ³Ê¹« ¸¹À»¶§ Æ¯Á¤ ¿ø¼Ò¸¸ °ñ¶ó¼­ °¡Á®¿À´Â °Í.
 ```
 SELECT field1,field2....
 ```
-ÀÏºÎ¸¸ °¡Á®¿Ã ¼ö ÀÖ´Â ±â´É
-interface±â¹İ, class±â¹İ µÎ°¡Áö ¹æ¹ı. closed projection, open projection
+- ÀÏºÎ¸¸ °¡Á®¿Ã ¼ö ÀÖ´Â ±â´É
+  - interface±â¹İ, class±â¹İ µÎ°¡Áö ¹æ¹ı. closed projection, open projection
 
-closed Projection
+#### closed Projection
 >¿øÇÏ´Â ¼Ó¼º¸¸ °¡Áö°íÀÖ´Â Entity Á¤ÀÇ
 
 Transaction
 >@Transactional ±â´É. »ç¿ëÇÏ´Â RepositoryµéÀº Æ®·£Àè¼ÇÀÌ ¸ğµÎ Àû¿ëµÇ¾î ÀÖ´Ù.
 
-@Transactional AnnotationÀº Runtime exception, ¿¡·¯°¡ ¹ß»ıÇÏ¸é RollbackÀ» Àû¿ëÇÑ´Ù.
-flushmode: database¿¡ ½ÌÅ©¸¦ ÇÏ´Â ¸ğµå. ¾ğÁ¦ µ¥ÀÌÅÍº£ÀÌ½º¿¡ ½ÌÅ©¸¦ ÇÒ°ÍÀÎ°¡. flush neverÀÎ °æ¿ì : ³ª´Â ÇÃ·¯½¬¸¦ ¾ÈÇÒ°Í. Readonly·Î »ç¿ëÇÒ°ÍÀÌ±â ¶§¹®¿¡. dirty checkingÀ» ÇÏÁö ¾Ê¾Æµµ µÈ´Ù. ¼º´É Çâ»ó¿¡ ¸¹Àº µµ¿òÀÌ µÊ.
+#### @Transactional AnnotationÀº Runtime exception, ¿¡·¯°¡ ¹ß»ıÇÏ¸é RollbackÀ» Àû¿ëÇÑ´Ù. flushmode: database¿¡ ½ÌÅ©¸¦ ÇÏ´Â ¸ğµå. ¾ğÁ¦ µ¥ÀÌÅÍº£ÀÌ½º¿¡ ½ÌÅ©¸¦ ÇÒ°ÍÀÎ°¡. flush neverÀÎ °æ¿ì : ³ª´Â ÇÃ·¯½¬¸¦ ¾ÈÇÒ°Í. Read only·Î »ç¿ëÇÒ°ÍÀÌ±â ¶§¹®¿¡. dirty checkingÀ» ÇÏÁö ¾Ê¾Æµµ µÈ´Ù. ¼º´É Çâ»ó¿¡ ¸¹Àº µµ¿òÀÌ µÊ.
 
-Auditing : º¯È­°¡ ¹ß»ı ÇßÀ»¶§, ¾ğÁ¦ ´©±¸¿¡ ÀÇÇØ ¹ß»ı ÇÏ¿´´ÂÁö¸¦ ±â·ÏÇÏ´Â ±â´É.
-
-@CreatedDate
-@LastModifiedDate
-@CreatedBy
-@LastModifiedBy
-AuditingÀº ÀÚµ¿¼³Á¤ÀÌ µÇÁö ¾Ê±â ¶§¹®¿¡ ¸ŞÀÎ ¾îÇÃ¸®ÄÉÀÌ¼Ç À§¿¡ EnalbleJpaAiditing Ãß°¡.
-
-¿£Æ¼Æ¼ Å¬·¡½º À§¿¡ @EntitiyListeners Ãß°¡.
+- Auditing : º¯È­°¡ ¹ß»ı ÇßÀ»¶§, ¾ğÁ¦ ´©±¸¿¡ ÀÇÇØ ¹ß»ı ÇÏ¿´´ÂÁö¸¦ ±â·ÏÇÏ´Â ±â´É.
+  - @CreatedDate, @LastModifiedDate, @CreatedBy, @LastModifiedBy
+  - AuditingÀº ÀÚµ¿¼³Á¤ÀÌ µÇÁö ¾Ê±â ¶§¹®¿¡ ¸ŞÀÎ ¾îÇÃ¸®ÄÉÀÌ¼Ç À§¿¡ EnalbleJpaAiditing Ãß°¡.
+  - ¿£Æ¼Æ¼ Å¬·¡½º À§¿¡ @EntitiyListeners Ãß°¡.
