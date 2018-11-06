@@ -6,6 +6,7 @@ Today i learned about spring-boot
 MVC 패턴에서 Controller 같은 것. start -> initialize -> service -> destroy
 
 ### spring-boot로 초기셋팅.
+
 1. spring boot 플러그인 설치
 2. 플러그인을 설치하면 spring intiaizr가 생김.
 3. 이걸 선택해서 프로젝트 생성.
