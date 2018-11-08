@@ -196,7 +196,7 @@ public interface BoardRepository extends JpaRepository<board, Long> {
 board findByusername(@Param("username")String username);
 ```
 
-#### 5. @Query Annotation을 사용해 함수를 만들 수 있다. 다만 JPQL로 작성하여야 하며, 별칭은 필수로 사용하여야한다. (이 부분때문에 오래걸림)
+#### 5. @Query Annotation을 사용해 함수를 만들 수 있다. 다만 JPQL로 작성하여야 하며, 별칭은 필수로 사용하여야한다. (이 부분때문에 오래걸림)
 ```
  SELECT m FROM Member AS m where m.username = 'HY'
  별칭을 지정하는 AS는 생략 가능하다.
