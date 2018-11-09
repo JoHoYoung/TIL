@@ -363,7 +363,9 @@ public class Comment{
 
 }
 
-@OneToMany(cascade =CascadeType.PERSIST)로 설정을 하면. post.save()로 저장을 할때 이 persistant를 알려주세요. transient에서 넘어갈때 같이 persistant가되고 저장이 된다. CascadeType.REMOVE 설정은 지울때 포스트를 삭제하는순간 removed상태가 전파가 되고 comment도 removed상태가 돼서 같이 지워준다. 그냥 CASCADETYE.ALL로 전부 전파하도록 설정하면 편하다.
+@OneToMany(cascade =CascadeType.PERSIST)로 설정을 하면. post.save()로 저장을 할때 이 persistant를 알려주세요.
+transient에서 넘어갈때 같이 persistant가되고 저장이 된다. CascadeType.REMOVE 설정은 지울때 포스트를 삭제하는순간 removed상태가 전파가 되고
+comment도 removed상태가 돼서 같이 지워준다. 그냥 CASCADETYE.ALL로 전부 전파하도록 설정하면 편하다.
 ```
 
 - Fetch 연관관계의 엔티티를 어떻게 가져올것인가. 지(Eager?) 나중에(Lazy?) .
