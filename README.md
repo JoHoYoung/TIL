@@ -18,7 +18,6 @@ MVC 패턴에서 Controller 같은 것. start -> initialize -> service -> destroy
 9. 포트는 기본이 8080인듯 한데 포트는 어떻게 바꾸는 것일까?
 > 포트는 application.properties에서 server.port=num 으로 기본 port를 바꿀 수 있다고 한다.
 10. Controller 클래스를 만드는데, 클래스가 만들어지는 위치가 중요하다. 위에서 언급했듯이 스프링부트는 메인클래스의 설정에 의해 컴포넌트스캔을 한다고 했었는데,스프링부트는 컴포넌트 스캔을 할 때, 기본적으로 메인클래스가 있는 위치를 기준으로 스캔을 하게된다.만약, AutoScan이 되어야 하는 컴포넌트 클래스들 - 대표적으로 @Controller, @Service, @Repository, @Component등의 위치가 메인클래스가 위치한 패키지보다  상위 패키지에 있거나, 하위가 아닌 다른 패키지에 있는 경우, 스캔이 되지 않는다.
-
 ### SpringBoot의 MVC 기본.
 #### 1. view의 기본 - jsp를 사용하기 위한 중요한 설정. (이것 때문에 한참 삽질했다)
 >pom.xml에
@@ -558,4 +557,4 @@ Transaction
 - Auditing : 변화가 발생 했을때, 언제 누구에 의해 발생 하였는지를 기록하는 기능.
   - @CreatedDate, @LastModifiedDate, @CreatedBy, @LastModifiedBy
   - Auditing은 자동설정이 되지 않기 때문에 메인 어플리케이션 위에 EnalbleJpaAiditing 추가.
-  - 엔티티 클래스 위에 @EntitiyListeners 추가.
+  - 엔티티 클래스 위에 @EntitiyListeners 추가
