@@ -128,5 +128,4 @@ divs.forEach(function(div) {
 		capture: true // default 값은 false입니다.
 	});
 });
-
 event.stopPropagation();
