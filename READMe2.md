@@ -122,10 +122,10 @@ HTML은 기본적으로 트리구조의 DOM을 표현한다.
 버블링과 캡쳐링은 정 반대로 동작한다.
 버블링은 특정 DOM에서 이벤트가 발생하면 하위 DOM으로 부터 부모 DOM으로 한단계씩 전파된다.
 캡쳐링은 이벤트가 최상위 부모 DOM부터 하위 DOM까지 전파되는 것을 의미한다.
-
 divs.forEach(function(div) {
 	div.addEventListener('click', logEvent, {
 		capture: true // default 값은 false입니다.
 	});
 });
+
 event.stopPropagation();
