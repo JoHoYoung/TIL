@@ -15,6 +15,14 @@ HyperText Transfer Protocol의 약자로 하이퍼텍스트 문서를 교환하�
 INNER(내부) JOIN 과 대비하여 OUTER(외부) JOIN이라고 불리며, JOIN 조건에서 동일한 값이 없는 행도 반환할 때 사용합니다.
 즉 A, B 테이블을 JOIN 할 경우, 조건에 맞지 않는 데이터도 표시하고 싶을 때 OUTER JOIN을 사용합니다.
 
+ALTER TABLE PLAYER
+RENAME COLUMN PLAYER_ID TO TEAM_ID;
+
+ALTER TABLE TEAM_TEMP
+MODIFY (ORIG_YYYY VARCHAR2(8) DEFAULT '20020129' NOT NULL);
+alter table ARTICLE change id1 id varchar(50)
+
+
 
 ##URI와 URL의 차이
 URI는 Uniform Resource Identifier 이고,
