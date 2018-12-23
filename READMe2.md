@@ -112,4 +112,21 @@ UDP를 사용하는 프로그램 쪽에서 오류제어 기능을 스스로 갖�
 즉, 헤더 처리에 많은 시간과 노력을 요하지 않음
 
 
+불러오기 , 파싱 , DOM tree , Rendering Tree - > 그리기.
 
+하나의 부모 DOM을 만들어서 이벤트를 처리하는것이 바로 델리게이션이다.
+
+HTML은 기본적으로 트리구조의 DOM을 표현한다.
+자식 DOM 요소에 발생한 이벤트는 포괄적으로 보면 부모 DOM에서도 발생한 것으로 인지할 수 있다.
+
+버블링과 캡쳐링은 정 반대로 동작한다.
+버블링은 특정 DOM에서 이벤트가 발생하면 하위 DOM으로 부터 부모 DOM으로 한단계씩 전파된다.
+캡쳐링은 이벤트가 최상위 부모 DOM부터 하위 DOM까지 전파되는 것을 의미한다.
+
+divs.forEach(function(div) {
+	div.addEventListener('click', logEvent, {
+		capture: true // default 값은 false입니다.
+	});
+});
+
+event.stopPropagation();
