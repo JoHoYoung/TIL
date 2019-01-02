@@ -201,6 +201,26 @@ $ make
 $ sudo make install
 ```
 
+masterha_ip_failover 스크립트를 위치로 옮긴다.
+
+```
+$ sudo cp -p samples/scripts/master_ip_failover /usr/local/bin/
+$ chown root:root/usr/local/bin/master_ip_failover
+```
+FIXME__ 부분을 주석처리한다
+
+```
+[error][/usr/local/share/perl/5.22.1/MHA/MasterMonitor.pm, ln427] Error happened on checking configurations.  at /usr/local/bin/masterha_check_repl line 48.
+```
+의 경우 mysql의 버전을 제대로 가져오지 못해서 나는 에러이다. 해당파일의 일치하는 부분을 다음과 같이 수정하면 된다.
+```
+sub parse_mysql_version($) {
+  my $str = shift;
+ ($str) =  $str =~ m/^[^-]*/g;
+  my $result = sprintf( '%03d%03d%03d', $str =~ m/(\d+)/g );
+  return $result;
+}
+```
 manager config 파일을 작성하기 전, 각 mysql서버에 mha용 계정을 만든다.
 ```
 GRANT ALL ON *.* TO 'mha'@'%' IDENTIFIED BY 'mhapass';
@@ -247,6 +267,17 @@ port=3306
 hostname=54.185.37.228
 port=3306
 ```
+haproxy 시작
+```
+haproxy -f /etc/haproxy/haproxy.cfg
+```
+
+mha 시작
+```
+masterha_manager --conf=/var/log/masterha/test.conf
+```
+
+daemontool 로 mha 구동
 Mha가 모니터링 하다가 Master에 문제가 있을시, Slave를 Master로 승격시킨다.
 
 MHA Failover시 Haproxy를 이용한 LoadBalancing
@@ -518,4 +549,3 @@ bind 0.0.0.0:80       // UI 프론트 설정. 80번포트에 연결
 ```
 마스터, 슬레이브 상태 및 마스터 다운시 새로운 마스터가된 인스턴스의 상태도 알 수 있다.
 <img width="1440" alt="screen shot 2018-12-17 at 2 25 52 pm" src="https://user-images.githubusercontent.com/37579650/50068114-ba971180-0207-11e9-8581-5129e5b0aca7.png">
-
